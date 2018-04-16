@@ -1,0 +1,6 @@
+{
+    "to":"userName can be null",
+    "from":"userName",
+    "action": "action",
+    "data": "data info, it can be an array, object or null"
+}
