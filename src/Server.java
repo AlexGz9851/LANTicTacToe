@@ -33,14 +33,14 @@ public class Server {
 
                 int c;
                 StringBuilder response = new StringBuilder();
-                while ((c = in.read()) != -1) {
+                while ((c = in.read()) != 0) {
             		response.append( (char)c ) ;
                 }
                 
                 String responseString = response.toString();
                 
                                 
-                System.out.println("The incoming message is: " + responseString);
+                System.out.println("The start message is: " + responseString);
 
                 JsonObject json = new JsonObject();
                 try
