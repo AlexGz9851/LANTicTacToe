@@ -33,17 +33,25 @@ public class Conection extends Thread{
             user = newUser.get("userName").toString();
             if(!conectionMap.containsKey(user)) {
             	conectionMap.put(this.user, this.socket);
+            	System.out.println("Usuario "+this.user+" Ingreso correctamente al sistema");
             	readMessages();
             }
+            else {
+            	this.closeSocket();
+        	}
             
         }
-    	logOut();
+    	else {
+    		this.closeSocket();
+    	}
+    	
+    	
     }
    
     private void readMessages()
     {
-        while(true)
-        {
+        while(socket.isConnected() && !socket.isClosed())
+        {        
             String message;
             JsonObject json = new JsonObject();
             try
@@ -90,19 +98,23 @@ public class Conection extends Thread{
     
     private void logOut()
     {
-        try{
-            this.conectionMap.remove(this.user);
-            this.socket.close();
-            System.out.println("Sesion cerrada del usuario: " + this.user);
-            this.finalize();
-        }
-        catch(IOException ex)
-        {
-            System.out.println(ex.getMessage());
-        } 
-        catch (Throwable ex) {
-            System.out.println(ex.getMessage());
-        } 
+        this.conectionMap.remove(this.user);
+        this.closeSocket();
+    }
+    
+    private void closeSocket() {
+    	try {
+	    	this.socket.close();
+	        this.finalize();
+	        System.out.println("Socket cerrado: " + this.socket.getInetAddress());
+    	}
+	    catch(IOException ex)
+	    {
+	        System.out.println(ex.getMessage());
+	    } 
+	    catch (Throwable ex) {
+	        System.out.println(ex.getMessage());
+	    } 
     }
 }
 

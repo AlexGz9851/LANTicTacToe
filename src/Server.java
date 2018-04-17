@@ -33,7 +33,7 @@ public class Server {
 
                 int c;
                 StringBuilder response = new StringBuilder();
-                while ((c = in.read()) != -1) {
+                while ((c = in.read()) != 0) {
             		response.append( (char)c ) ;
                 }
                 
