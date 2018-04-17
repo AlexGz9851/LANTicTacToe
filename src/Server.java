@@ -40,7 +40,7 @@ public class Server {
                 String responseString = response.toString();
                 
                                 
-                System.out.println("The incoming message is: " + responseString);
+                System.out.println("The start message is: " + responseString);
 
                 JsonObject json = new JsonObject();
                 try

@@ -60,7 +60,7 @@ public class Conection extends Thread{
                 ));
                 int c;
                 StringBuilder response= new StringBuilder();
-                while ((c = in.read()) != -1) {
+                while ((c = in.read()) != 0) {
                     response.append( (char)c ) ;  
                 }
                 message = response.toString();
@@ -79,6 +79,7 @@ public class Conection extends Thread{
                     Writer out = new BufferedWriter(new OutputStreamWriter(
                        conectionMap.get(to).getOutputStream(), "UTF8"));
                     out.append(json.toString());
+                    out.append((char)0);
                     out.flush();
                 }
             }
