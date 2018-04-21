@@ -1,11 +1,16 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.Socket;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 public class Message{
@@ -41,6 +46,39 @@ public class Message{
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	public static JsonObject readMessage(Socket conection) {
+		try {
+			Reader in = new BufferedReader(new InputStreamReader(
+	        		conection.getInputStream(), "UTF8"
+	        ));
+	
+	        int c;
+	        StringBuilder response = new StringBuilder();
+	        while ((c = in.read()) != 0) {
+	    		response.append( (char)c ) ;
+	        }
+	        
+	        String responseString = response.toString();
+	        
+	                        
+	        System.out.println("The start message is: " + responseString);
+	
+	        JsonObject json = new JsonObject();
+        	JsonParser parser = new JsonParser();
+            json = (JsonObject) parser.parse(responseString);
+            return json;
+        
+		}
+        catch (JsonParseException ex) {
+            System.out.println(ex);
+        } catch (UnsupportedEncodingException ex) {
+        	System.out.println(ex);
+		} catch (IOException ex) {
+			System.out.println(ex);
+		}
+		return new JsonObject();
 	}
 	
 	@Override

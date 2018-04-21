@@ -1,23 +1,20 @@
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.Writer;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonParseException;;
 
-public class Conection extends Thread{
+public class Connection extends Thread{
     
     private final JsonObject data;
     private final Socket socket;
     ConcurrentHashMap<String, Socket>conectionMap;
     private String user;
    
-    public Conection(JsonObject data, Socket socket, ConcurrentHashMap<String, Socket>conectionMap)
+    public Connection(JsonObject data, Socket socket, ConcurrentHashMap<String, Socket>conectionMap)
     {
         this.data = data;
         this.socket =socket;
@@ -37,6 +34,13 @@ public class Conection extends Thread{
             	readMessages();
             }
             else {
+            	JsonObject data = new JsonObject();
+            	JsonPrimitive message = new JsonPrimitive("Existing user");
+            	JsonPrimitive code = new JsonPrimitive("1");
+            	data.add("message", message);
+            	data.add("errorCode", code);
+            	Message msg = new Message("Server", null, "error", data, this.socket);
+            	msg.sendMessage();
             	this.closeSocket();
         	}
             
@@ -52,23 +56,10 @@ public class Conection extends Thread{
     {
         while(socket.isConnected() && !socket.isClosed())
         {        
-            String message;
             JsonObject json = new JsonObject();
             try
             {
-                Reader in = new BufferedReader(new InputStreamReader(                		socket.getInputStream(), "UTF8"
-                ));
-                int c;
-                StringBuilder response= new StringBuilder();
-                while ((c = in.read()) != 0) {
-                    response.append( (char)c ) ;  
-                }
-                message = response.toString();
-
-                System.out.println("The input message is: " + message);
-                JsonParser parser = new JsonParser();
-                json = (JsonObject) parser.parse(message);
-                
+                json = Message.readMessage(socket);
                 if(json.get("action").getAsString().equals("logOut"))
                 {
                     logOut();
