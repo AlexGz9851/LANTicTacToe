@@ -21,8 +21,8 @@ public class Client {
     
     public Client() {
     	try {
-    		this.user = "Ivan";
-        	this.server = "192.168.1.34";
+    		this.user = "Aletzin";
+        	this.server = "192.168.43.185";
 			this.conection = new Socket(server, 8081);
 			this.logIn = new JsonObject();
 	    	
