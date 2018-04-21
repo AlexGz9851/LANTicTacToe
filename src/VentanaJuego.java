@@ -11,8 +11,8 @@ public class VentanaJuego extends JFrame{
 	public VentanaJuego() {
 		super("3D Tic Tac Toe");
 		pj=new PanelJuego();
-		pi=new PanelInicio();
-		dim=pj.getDimen();
+		pi=new PanelInicio(pj);
+		dim= new Dimension(870, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setPreferredSize(this.dim);
 		//Colocar por default la ventana al centro.
@@ -21,10 +21,14 @@ public class VentanaJuego extends JFrame{
 	            (this.pantalla.height - this.dim.height) / 2);
 	    
 		//this.add(); add game and historial?? GESTOR DE PANELES.
+	    this.add(pj);
 	    this.add(pi);
+	    pj.setVisible(false);
+	    pi.setVisible(true);
+	    
 		this.pack();
 		this.setVisible(true);
-		// TODO Auto-generated constructor stub
+		
 	}
 	public static void main(String[] args) {
 		VentanaJuego vj= new VentanaJuego();

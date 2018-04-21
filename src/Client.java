@@ -19,9 +19,9 @@ public class Client {
     JsonObject messages;
     Socket conection;
     
-    public Client() {
+    public Client(String userx) {
     	try {
-    		this.user = "Aletzin";
+    		this.user = userx;
         	this.server = "192.168.43.185";
 			this.conection = new Socket(server, 8081);
 			this.logIn = new JsonObject();
@@ -68,10 +68,5 @@ public class Client {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	    }
-    
-    public static void main(String[] args) {
-    	Client c = new Client();
-    }
-    
+    }   
 }

@@ -1,10 +1,14 @@
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class PanelJuego extends JPanel implements MouseListener{
@@ -21,12 +25,16 @@ public class PanelJuego extends JPanel implements MouseListener{
 				xB,
 				xC,
 				lenghtG;
-	private Font font;
+	private Font font,fontB;
 	private PanelJugadores pjs;
 	private Dimension dimen;
+	private Button newGame;
+	private static final Color OCOLOR= new Color(102, 217, 239);
 	
 	public PanelJuego() {
 		super();
+		this.setLayout(null);
+		this.newGame= new Button("New game");
 		this.dimen=new Dimension(870, 600);
 		this.margen=(int)(dimen.getWidth()*3/87.0);
 		this.lenghtG=(int)(dimen.getWidth()*25/87.0);
@@ -40,7 +48,30 @@ public class PanelJuego extends JPanel implements MouseListener{
 		this.addMouseListener(this);
 		this.setPreferredSize(dimen);
 		this.setBackground(BKG);
+		
+		fontB=new Font("Arial",Font.BOLD,24);
+		this.newGame.setFont(fontB);
+		this.newGame.setBounds(500, 100, 140, 40);
+		this.newGame.setBackground(OCOLOR);
 		font=new Font("Arial",Font.BOLD,40);
+		this.newGame.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean win=false;//para testeo, la señal la enviará el controlador.
+				int out;
+				if(!win) {
+					out=JOptionPane.showConfirmDialog(PanelJuego.this, "Are you sure? This game gonna be considered as lost.");
+					if(out==JOptionPane.YES_OPTION) {
+						
+					}else{
+						
+					}
+				}else {
+					
+				}
+			}
+		});
+
+		this.add(newGame);
 	}
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

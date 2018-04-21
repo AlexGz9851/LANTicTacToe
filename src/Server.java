@@ -11,12 +11,15 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonParseException;
 
 public class Server {
+    private ServerSocket serverSocket;
+    private ArrayList<Socket> sockets;
+    private ArrayList<Conection> conectionsList ;
+    private ConcurrentHashMap<String, Socket> socketsMap;
+	public Server() {
 
-    public static void main(String[] args) {
-        ServerSocket serverSocket;
-        ArrayList<Socket> sockets = new ArrayList<>();
-        ArrayList<Conection> conectionsList = new ArrayList<Conection>();
-        ConcurrentHashMap<String, Socket> socketsMap = new ConcurrentHashMap<>();
+        sockets = new ArrayList<>();
+        conectionsList = new ArrayList<Conection>();
+        socketsMap = new ConcurrentHashMap<>();
         try
         {
             serverSocket = new ServerSocket(8081);
@@ -60,5 +63,20 @@ public class Server {
         {
             System.out.println(e.getMessage());
         }
+	}
+	/*
+	public boolean usernameIsUsed(String user) {
+		boolean i;
+		Socket s;
+		try {
+			s=socketsMap.get(user);
+			return true;
+		}catch(NullPointerException e) {
+			return false;
+		}
+	}
+	*/
+    public static void main(String[] args) {
+    	Server s=new Server();
     }
 }
