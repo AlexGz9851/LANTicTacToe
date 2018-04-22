@@ -13,60 +13,49 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class Client {
-	String user;
-    String server;
-    JsonObject logIn;
-    JsonObject messages;
-    Socket conection;
+	private static String user;
+    private static Socket connection;
+    private static Client client = new Client();
     
-    public Client(String userx) {
-    	try {
-    		this.user = userx;
-        	this.server = "192.168.43.185";
-			this.conection = new Socket(server, 8081);
-			this.logIn = new JsonObject();
-	    	
-			
-	    	JsonObject data = new JsonObject();
-	    	JsonPrimitive user = new JsonPrimitive(this.user);
-	    	data.add("userName", user);
-	    	
-	    	Message msg = new Message(this.user, null, "newUser", data, this.conection);
-	    	msg.sendMessage();
-    		Thread.sleep(5000);
-    		
-    		JsonObject data2 = new JsonObject();
-	    	JsonPrimitive spam = new JsonPrimitive("trash");
-	    	data2.add("spam", spam);
-    		Message something = new Message(this.user, this.user, "something", data2, this.conection);
-    		for(int i = 0; i < 5; i++) {
-	    		something.sendMessage();
-	    		Thread.sleep(5000);
-	    		Reader in=new BufferedReader(new InputStreamReader(
-		           conection.getInputStream(),"UTF8"
-				));
-	            int c;
-		        StringBuilder message = new StringBuilder();
-		        while ((c=in.read()) != 0){
-			        message.append((char)c);
-		        }
-		        System.out.println(message);
-    		}
-    		Message logout =  new Message(this.user, null, "logOut", null, conection);
-    		logout.sendMessage();
-	        while(true) {
-	        	Thread.sleep(100);
-            }	
-	    	
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+    private Client() 
+    {
+		try {
+			this.connection = new Socket("192.168.43.185", 8081);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-    }   
+    }
+    
+    public static Client getClient() {
+    	return Client.client;
+    }
+    
+
+    
+    public boolean tryLogin(String user) {
+    	Client.user = user;
+    	
+    	JsonObject data = new JsonObject();
+    	JsonPrimitive userName = new JsonPrimitive(Client.user);
+    	data.add("userName", userName);
+    	Message msg = new Message(Client.user, null, "newUser", data, Client.connection);
+    	msg.sendMessage();
+    	
+    	JsonObject answer = Message.readMessage(Client.connection);
+    	
+    	String action = answer.get("action").getAsString();
+    	if(!action.equals("error"))
+    		return true;
+    	else
+    		return false;
+    }
+    
+    public JsonObject read() {
+    	return Message.readMessage(Client.connection);
+    }
+    
+    public void send(Message msg) {
+    	msg.sendMessage();
+    }
 }

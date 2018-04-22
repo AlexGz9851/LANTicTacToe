@@ -33,18 +33,13 @@ public class Connection extends Thread{
             JsonObject newUser = (JsonObject) data.get("data");
             user = newUser.get("userName").toString();
             if(!connectionMap.containsKey(user)) {
+            	new Message("Server", null, "ok", null, this.socket).sendMessage();
             	connectionMap.put(this.user, this.socket);
             	System.out.println("Usuario "+this.user+" Ingreso correctamente al sistema");
             	readMessages();
             }
             else {
-            	JsonObject data = new JsonObject();
-            	JsonPrimitive message = new JsonPrimitive("Existing user");
-            	JsonPrimitive code = new JsonPrimitive("1");
-            	data.add("message", message);
-            	data.add("errorCode", code);
-            	Message msg = new Message("Server", null, "error", data, this.socket);
-            	msg.sendMessage();
+            	new Message("Server", null, "error", null, this.socket).sendMessage();
             	this.closeSocket();
         	}
             

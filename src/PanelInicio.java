@@ -36,6 +36,7 @@ public class PanelInicio extends JPanel{
 	public PanelInicio(PanelJuego pj) {
 		//Constructor panel
 		super();
+		Client c = Client.getClient();
 		this.pj=pj;
 		this.setBackground(BKG);
 		this.dimen=new Dimension(870, 600);
