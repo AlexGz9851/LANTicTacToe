@@ -38,18 +38,8 @@ public class Server {
             System.out.println(e.getMessage());
         }
 	}
-	/*
-	public boolean usernameIsUsed(String user) {
-		boolean i;
-		Socket s;
-		try {
-			s=socketsMap.get(user);
-			return true;
-		}catch(NullPointerException e) {
-			return false;
-		}
-	}
-	*/
+
+	
     public static void main(String[] args) {
     	Server s = new Server();
     }
