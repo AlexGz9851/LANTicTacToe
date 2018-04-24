@@ -27,8 +27,8 @@ public class Message{
 		this.message.add("data", data);
 	}
 	
-	public Message(String from, String to, String action, JsonObject data, Socket conection) {
-		this(new JsonPrimitive(from), to!=null ? new JsonPrimitive(to):null, new JsonPrimitive(action), data!=null?data:null, conection);
+	public Message(String from, String to, Action action, JsonObject data, Socket conection) {
+		this(new JsonPrimitive(from), to!=null ? new JsonPrimitive(to):null, new JsonPrimitive(action.toString()), data!=null?data:null, conection);
 	}
 	
 	public boolean sendMessage() {

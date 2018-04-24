@@ -13,8 +13,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class Client {
-	private static String user;
-    private static Socket connection;
+	private String user;
+    private Socket connection;
     private static Client client = new Client();
     
     private Client() 
@@ -34,15 +34,14 @@ public class Client {
 
     
     public boolean tryLogin(String user) {
-    	Client.user = user;
+    	this.user = user;
     	
     	JsonObject data = new JsonObject();
-    	JsonPrimitive userName = new JsonPrimitive(Client.user);
+    	JsonPrimitive userName = new JsonPrimitive(this.user);
     	data.add("userName", userName);
-    	Message msg = new Message(Client.user, null, "newUser", data, Client.connection);
-    	msg.sendMessage();
+    	this.send(null, Action.NEWUSER, data);
     	
-    	JsonObject answer = Message.readMessage(Client.connection);
+    	JsonObject answer = Message.readMessage(this.connection);
     	
     	String action = answer.get("action").getAsString();
     	if(!action.equals("error"))
@@ -52,10 +51,16 @@ public class Client {
     }
     
     public JsonObject read() {
-    	return Message.readMessage(Client.connection);
+    	return Message.readMessage(this.connection);
     }
     
     public void send(Message msg) {
     	msg.sendMessage();
     }
+    
+    public void send(String to, Action action, JsonObject data) {
+    	new Message(this.user, to, action, data, this.connection);
+    }
+    
+    public String getUser() {return this.user;}
 }

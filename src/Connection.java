@@ -15,10 +15,10 @@ public class Connection extends Thread{
     
     private final JsonObject data;
     private final Socket socket;
-    ConcurrentHashMap<String, Socket>connectionMap;
+    ConcurrentHashMap<String, User>connectionMap;
     private String user;
    
-    public Connection(JsonObject data, Socket socket, ConcurrentHashMap<String, Socket>conectionMap)
+    public Connection(JsonObject data, Socket socket, ConcurrentHashMap<String, User> conectionMap)
     {
         this.data = data;
         this.socket = socket;
@@ -28,18 +28,19 @@ public class Connection extends Thread{
     @Override
     public void run()
     {
-    	if(data.get("action").getAsString().equals("newUser"))
+    	Action action = Action.getValue(data.get("action").getAsString());
+    	if(action == Action.NEWUSER)
         {
             JsonObject newUser = (JsonObject) data.get("data");
             user = newUser.get("userName").toString();
             if(!connectionMap.containsKey(user)) {
-            	new Message("Server", null, "ok", null, this.socket).sendMessage();
-            	connectionMap.put(this.user, this.socket);
+            	new Message("Server", null, Action.OK, null, this.socket).sendMessage();
+            	connectionMap.put(this.user, new User(this.user, this.socket));
             	System.out.println("Usuario "+this.user+" Ingreso correctamente al sistema");
             	readMessages();
             }
             else {
-            	new Message("Server", null, "error", null, this.socket).sendMessage();
+            	new Message("Server", null, Action.ERROR, null, this.socket).sendMessage();
             	this.closeSocket();
         	}
             
@@ -59,13 +60,13 @@ public class Connection extends Thread{
             try
             {
                 json = Message.readMessage(socket);
-                String action = json.get("action").getAsString();
-                if(action.equals("logOut"))
+                Action action = Action.getValue(json.get("action").getAsString());
+                if(action == Action.LOGOUT)
                 {
                     logOut();
                     break;
                 }
-                else if(action.equals("userList")) // TODO change the equals to the correct action Name
+                else if(action == Action.USERLIST)
                 {
                 	Enumeration<String> keys =this.connectionMap.keys();
                 	String[] users = new String[this.connectionMap.size()];
@@ -76,13 +77,13 @@ public class Connection extends Thread{
                 	JsonObject data = new JsonObject();
                 	JsonPrimitive userList = new JsonPrimitive(new Gson().toJson(users));
                 	data.add("userList", userList);
-                	Message msg = new Message("server", null, "userList", data, this.socket);
+                	Message msg = new Message("server", null, Action.USERLIST, data, this.socket);
                 	msg.sendMessage();
                 }
                 else {
                     String to = json.get("to").toString();
                     Writer out = new BufferedWriter(new OutputStreamWriter(
-                       connectionMap.get(to).getOutputStream(), "UTF8"));
+                       connectionMap.get(to).getSocket().getOutputStream(), "UTF8"));
                     out.append(json.toString());
                     out.append((char)0);
                     out.flush();

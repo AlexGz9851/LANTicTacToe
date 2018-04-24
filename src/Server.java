@@ -10,7 +10,7 @@ public class Server {
     private ServerSocket serverSocket;
     private ArrayList<Socket> sockets;
     private ArrayList<Connection> conectionsList ;
-    private ConcurrentHashMap<String, Socket> socketsMap;
+    private ConcurrentHashMap<String, User> socketsMap;
     
 	public Server() {
         sockets = new ArrayList<>();
