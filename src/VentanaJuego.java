@@ -1,20 +1,24 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
 public class VentanaJuego extends JFrame{
+	private static final Color BKG=new Color(39,40,34);
 	private Dimension dim;
 	private Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
 	private PanelJuego pj;
 	private PanelInicio pi;
 	public VentanaJuego() {
 		super("3D Tic Tac Toe");
+		this.setBackground(BKG);
 		pj=new PanelJuego();
 		pi=new PanelInicio(pj);
 		dim= new Dimension(870, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setPreferredSize(this.dim);
+		this.setResizable(false);
 		//Colocar por default la ventana al centro.
 	    this.setLocation(
 	            (this.pantalla.width - this.dim.width) / 2,
@@ -22,8 +26,8 @@ public class VentanaJuego extends JFrame{
 	    
 		//this.add(); add game and historial?? GESTOR DE PANELES.
 	    this.add(pj);
-	    this.add(pi);
-	    pj.setVisible(false);
+	    //this.add(pi);
+	    //pj.setVisible(false);
 	    pi.setVisible(true);
 	    
 		this.pack();

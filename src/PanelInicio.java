@@ -36,7 +36,7 @@ public class PanelInicio extends JPanel{
 	public PanelInicio(PanelJuego pj) {
 		//Constructor panel
 		super();
-		Client c = Client.getClient();
+		//Client c = Client.getClient();
 		this.pj=pj;
 		this.setBackground(BKG);
 		this.dimen=new Dimension(870, 600);
@@ -47,6 +47,7 @@ public class PanelInicio extends JPanel{
 		
 		//text field username. Here is where you insert that field.
 		this.tfEntradaNombre.addActionListener(new ActionListener() {
+				boolean validUsername;
 					public void actionPerformed(ActionEvent e) {
 						//Insert username
 						String tryUser=tfEntradaNombre.getText();
@@ -55,15 +56,15 @@ public class PanelInicio extends JPanel{
 							}
 							else {
 								//COMPARA CON BBD. SI NOMBRE VALIDO, CAMBIA DE VENTANA.######
-								//send name to check.*********************************+
-								
-								//if(valid name) {
-								//	client = new Client(tryUser);
-								//	setVisible(false);
-								//	pj.setVisible(true);	testin'. this shit is not working.
-								//}else {
-								//	JOptionPane.showMessageDialog(null, "Please Select another name, this is already taken. ");
-								//}
+								//validUsername=c.tryLogin(tryUser);
+								validUsername=true;//testing
+								if(validUsername) {
+									setVisible(false);
+									pj.setVisible(true);	//testin'. this shit is not working.
+									
+								}else {
+									JOptionPane.showMessageDialog(null, "Please Select another name, this is already taken. ");
+								}
 							}
 					}
 		});
@@ -73,8 +74,6 @@ public class PanelInicio extends JPanel{
 	}
 	
 	public void paintComponent(Graphics g) {
-		g.setColor(BKG);
-		g.fillRect(0, 0, 870, 600);
 		g.drawImage(this.imgGato, 0, this.getHeight()-350, 350, 277, this);
 		g.setFont(FONT);
 		g.setColor(XCOLOR);

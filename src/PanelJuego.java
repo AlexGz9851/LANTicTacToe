@@ -26,7 +26,6 @@ public class PanelJuego extends JPanel implements MouseListener{
 				xC,
 				lenghtG;
 	private Font font,fontB;
-	private PanelJugadores pjs;
 	private Dimension dimen;
 	private Button newGame;
 	private static final Color OCOLOR= new Color(102, 217, 239);
