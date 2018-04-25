@@ -1,26 +1,17 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
 import java.net.Socket;
-import java.net.UnknownHostException;
-
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class Client {
-	private String user;
+	private String user, opponent;
     private Socket connection;
     private static Client client = new Client();
     
     private Client() 
     {
 		try {
-			this.connection = new Socket("192.168.43.185", 8081);
+			this.connection = new Socket("192.168.1.34", 8081);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,8 +50,13 @@ public class Client {
     }
     
     public void send(String to, Action action, JsonObject data) {
-    	new Message(this.user, to, action, data, this.connection);
+    	new Message(this.user, to, action, data, this.connection).sendMessage();
     }
     
     public String getUser() {return this.user;}
+    
+    public void setOpponent(String opponent) {this.opponent = opponent;}
+    public String getOpponent() {return this.opponent;}
+    
+   
 }
