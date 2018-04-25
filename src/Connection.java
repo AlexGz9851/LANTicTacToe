@@ -28,31 +28,37 @@ public class Connection extends Thread{
     @Override
     public void run()
     {
-    	Action action = Action.getValue(data.get("action").getAsString());
-    	if(action == Action.NEWUSER)
-        {
-            JsonObject newUser = (JsonObject) data.get("data");
-            user = newUser.get("userName").toString();
-            if(!connectionMap.containsKey(user)) {
-            	new Message("Server", null, Action.OK, null, this.socket).sendMessage();
-            	connectionMap.put(this.user, new User(this.user, this.socket));
-            	System.out.println("Usuario "+this.user+" Ingreso correctamente al sistema");
-            	readMessages();
-            }
-            else {
-            	new Message("Server", null, Action.ERROR, null, this.socket).sendMessage();
-            	this.closeSocket();
-        	}
-            
-        }
-    	else {
-    		this.closeSocket();
+    	try {
+	    	Action action = Action.getValue(data.get("action").getAsString());
+	    	if(action == Action.NEWUSER)
+	        {
+	            JsonObject newUser = (JsonObject) data.get("data");
+	            user = newUser.get("userName").getAsString().toString();
+	            if(!connectionMap.containsKey(user)) {
+	            	new Message("Server", null, Action.OK, null, this.socket).sendMessage();
+	            	connectionMap.put(this.user, new User(this.user, this.socket));
+	            	System.out.println("Usuario "+this.user+" Ingreso correctamente al sistema");
+	            	readMessages();
+	            }
+	            else {
+	            	new Message("Server", null, Action.ERROR, null, this.socket).sendMessage();
+	            	this.closeSocket();
+	        	}
+	            
+	        }
+	    	else {
+	    		this.closeSocket();
+	    	}
+    	}
+    	catch(NullPointerException ex) {
+    		this.logOut();
+    		this.closeSocket();	
     	}
     	
     	
     }
    
-    private void readMessages()
+    private void readMessages() throws NullPointerException
     {
         while(socket.isConnected() && !socket.isClosed())
         {        
@@ -72,6 +78,8 @@ public class Connection extends Thread{
                 	String[] users = new String[this.connectionMap.size()];
                 	for(int i = 0; keys.hasMoreElements(); i++)
                 	{
+                		String value = keys.nextElement();
+                		if(!value.equals(this.user))
                 		users[i] = keys.nextElement();
                 	}
                 	JsonObject data = new JsonObject();
@@ -81,7 +89,7 @@ public class Connection extends Thread{
                 	msg.sendMessage();
                 }
                 else {
-                    String to = json.get("to").toString();
+                    String to = json.get("to").getAsString();
                     Writer out = new BufferedWriter(new OutputStreamWriter(
                        connectionMap.get(to).getSocket().getOutputStream(), "UTF8"));
                     out.append(json.toString());

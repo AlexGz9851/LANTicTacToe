@@ -63,7 +63,7 @@ public class Message{
 	        String responseString = response.toString();
 	        
 	                        
-	        System.out.println("The start message is: " + responseString);
+	        System.out.println("The message is: " + responseString);
 	
 	        JsonObject json = new JsonObject();
         	JsonParser parser = new JsonParser();
