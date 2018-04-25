@@ -1,42 +1,86 @@
-import javax.swing.JFrame;
+
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JComboBox;
 
-import java.awt.BorderLayout;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+
 import java.util.Random;
 
-import javax.swing.BoxLayout;
+
 import javax.swing.JButton;
-import com.google.gson.Gson;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 
-public class UserSelector extends JFrame implements ActionListener{
+public class UserSelector extends JPanel implements ActionListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Thread request;
 	private Client client;
-	private JButton btAceptar;
+	private JButton btAceptar,
+					btRefresh;
 	private JComboBox<String> cbUserList;
-	private JPanel panel;
+	//Colors and Fonts
+	private static final Color XCOLOR= new Color(249, 38, 114);
+	private static final Color OCOLOR= new Color(102, 217, 239);
+	private static final Color BKG=new Color(39,40,34);
+	private static final Font FONT=new Font("Arial",Font.BOLD,20);
+	private static final Font FONT2=new Font("Arial",Font.BOLD,30);
+	private Dimension dimen;
+	private JLabel jLab, jLab2;
+	
 	public UserSelector() {
-		super();//TODO el nombre de la ventana
-		client = Client.getClient();
-		client.send(null, Action.USERLIST, null);
-		JsonObject response = client.read().get("data").getAsJsonObject();
-		String[] userList = new Gson().fromJson(response.get("userList").getAsString(), String[].class);
+		super();
+		//client = Client.getClient();
+		//client.send(null, Action.USERLIST, null);
+		//JsonObject response = client.read().get("data").getAsJsonObject();
+		String[] userList = {"s","fffff","ggggg"};// new Gson().fromJson(response.get("userList").getAsString(), String[].class);
+		
+		this.setBackground(BKG);
+		this.dimen=new Dimension(435, 300);
+		this.setPreferredSize(dimen);
+		
 		cbUserList = new JComboBox<>(userList);
+		cbUserList.setBounds(0, 0, 300, 200);
+		cbUserList.setFont(FONT2);
+		cbUserList.setForeground(BKG);
+		cbUserList.setBackground(Color.WHITE);
 		btAceptar = new JButton("Aceptar");
+		btRefresh =new JButton("Refresh");
+		jLab= new JLabel("Choose an oponent to play!");
+		jLab.setForeground(Color.WHITE);
+		jLab.setFont(FONT2);
+		btAceptar.setFont(FONT);
+		btRefresh.setFont(FONT);
+		btAceptar.setBackground(XCOLOR);
+		btRefresh.setBackground(OCOLOR);
+		btAceptar.setForeground(Color.WHITE);
 		btAceptar.addActionListener(this);
-		panel = new JPanel();
-		panel.setLayout(new BorderLayout());
-		this.add(panel);
-		panel.add(cbUserList);
-		panel.add(btAceptar, BorderLayout.EAST);
+		btRefresh.addActionListener(this);
+	
+		this.add(new JLabel("x                                                          "));
+		this.add(jLab);
+		this.add(new JLabel("x                                                                                                     "));
+		this.add(new JLabel("x                                    "));
+		this.add(cbUserList);
+		this.add(new JLabel("x                                    "));
+		this.add(new JLabel("x                                                                                                                  "));
+
+		this.add(btAceptar);
+		this.add(btRefresh);
+
+
 		UserSelector self = this;
 		this.request = new Thread() {
 			@Override
@@ -54,14 +98,14 @@ public class UserSelector extends JFrame implements ActionListener{
 					}
 					if(action==Action.GAMEREQUEST) {
 						if(data == null) { 
-							self.panel.setEnabled(false);
+							self.setEnabled(false);
 							int answer = JOptionPane.showConfirmDialog(self, "Solicitud recibida de \""+from+"\" deseas aceptarla?", "Nueva solicitud", JOptionPane.YES_NO_OPTION);
 							if(answer == JOptionPane.YES_OPTION) {
 								acceptGameRequest(true, from);
 							}
 							else {
 								acceptGameRequest(false, from);
-								self.panel.setEnabled(true);
+								self.setEnabled(true);
 							}
 						}
 						else {
@@ -74,7 +118,7 @@ public class UserSelector extends JFrame implements ActionListener{
 							}
 							else {
 								JOptionPane.showMessageDialog(self, "Solicitud denegada");
-								self.panel.setEnabled(true);
+								self.setEnabled(true);
 							}
 						}
 					}
@@ -87,13 +131,25 @@ public class UserSelector extends JFrame implements ActionListener{
 			}
 		};
 		this.setVisible(true);
-		this.request.run();
+		//this.request.run();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		this.panel.setEnabled(false);
-		this.client.send((String)this.cbUserList.getSelectedItem(), Action.GAMEREQUEST, null);
+		if(e.getSource()==btAceptar) {
+			this.setEnabled(false);
+			this.client.send((String)this.cbUserList.getSelectedItem(), Action.GAMEREQUEST, null);
+		}else {
+			//Aqui agregue lo necesario para el refresh.
+			//IVAAAAAAAAAAN
+			//.....................................................................................
+			//
+			//Cabalga rapidamente entre los valles, deja correr tus instintos y hazle caso a tu intuición. 
+			//El retumbar de tu cabeza cesará parcialmente haciendo tregua, 
+			//es el momento ideal para ir de caza por todos tus sueños, alimentar la esperanza y eliminar tus miedos.
+			//Los edificios se mantienen en silencio, callando las historias que guardan en su estructura,
+			//secretos que permanecerán entre sus paredes. Mantendrán a salvo la intimidad de los seres que habitan en su interior
+		}
 	}
 	
 	private void acceptGameRequest(boolean value, String from) {
