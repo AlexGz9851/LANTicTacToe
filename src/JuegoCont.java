@@ -57,7 +57,7 @@ public class JuegoCont {
 		String celda=letraBoardSend+""+numeroSend;
 		boolean end,end2;
 		end=end2=false;
-		boolean valido;
+		boolean valido,valido2;
 		
 		valido=this.validateMove(numeroSend, letraBoardSend);
 		
@@ -94,7 +94,6 @@ public class JuegoCont {
 
 					char letraReaded =data.charAt(0);
 					int numeroReaded= data.charAt(1)-(int)('0');
-	
 					end2=this.calculate(numeroReaded, letraReaded, turno);//calculates the move back.
 					this.pj.repaint();
 					if(!end2) {
