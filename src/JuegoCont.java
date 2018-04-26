@@ -240,7 +240,7 @@ public class JuegoCont {
 			String from = moveBack.get("from").getAsString();
 			String data;
 			try {
-				data = moveBack.get("data").getAsString();
+				data = moveBack.get("data").getAsJsonObject().get("celda").getAsString();
 			}
 			catch(IllegalStateException ex) {
 				data = null;
@@ -253,6 +253,11 @@ public class JuegoCont {
 				int numeroReaded= data.charAt(1)-(int)('0');
 				end2=this.calculate(numeroReaded, letraReaded, turno);//calculates the move back.
 				this.pj.repaint();
+				if(!end2) {
+					this.turno=true;
+					this.pj.setBoardEnable(turno);
+					this.pj.setTurno((turno)?j1:j2);
+				}
 			}
 		}
 	}
