@@ -43,11 +43,11 @@ public class JuegoCont {
 		valido=this.validateMove(numeroSend, letraBoardSend);
 		
 		if(valido) {
-			//send the cell as data. 
-			this.turno=false;
-			this.pj.setBoardEnable(turno); //disable the board.
-			
+			//send the cell as data.
 			end=this.calculate( numeroSend,letraBoardSend, turno);//set new state in current cell, calculates if game ends.
+			this.pj.repaint();
+			this.turno=false;
+			this.pj.setBoardEnable(turno); //disable the board.		
 			this.pj.setTurno((turno)?j1:j2);//changes turn name.
 			
 			this.pj.repaint();
