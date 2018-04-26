@@ -43,10 +43,10 @@ public class UserSelector extends JPanel implements ActionListener{
 	
 	public UserSelector() {
 		super();
-		//client = Client.getClient();
-		//client.send(null, Action.USERLIST, null);
-		//JsonObject response = client.read().get("data").getAsJsonObject();
-		String[] userList = {"s","fffff","ggggg"};// new Gson().fromJson(response.get("userList").getAsString(), String[].class);
+		client = Client.getClient();
+		client.send(null, Action.USERLIST, null);
+		JsonObject response = client.read().get("data").getAsJsonObject();
+		String[] userList = new Gson().fromJson(response.get("userList").getAsString(), String[].class);
 		
 		this.setBackground(BKG);
 		this.dimen=new Dimension(435, 300);
@@ -143,7 +143,7 @@ public class UserSelector extends JPanel implements ActionListener{
 			}
 		};
 		this.setVisible(true);
-		//this.request.run();
+		this.request.start();
 	}
 
 	@Override

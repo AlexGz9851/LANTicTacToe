@@ -57,7 +57,7 @@ public class PanelJuego extends JPanel implements MouseListener{
 		font=new Font("Arial",Font.BOLD,40);
 		this.newGame.addActionListener( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean win=false;//para testeo, la señal la enviará el controlador.
+				boolean win=false;//para testeo, la señal la enviará el controlador. checar
 				int out;
 				if(!win) {
 					out=JOptionPane.showConfirmDialog(PanelJuego.this, "Are you sure? This game gonna be considered as lost.");

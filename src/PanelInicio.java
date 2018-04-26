@@ -35,7 +35,7 @@ public class PanelInicio extends JPanel{
 	public PanelInicio() {
 		//Constructor panel
 		super();
-		//Client c = Client.getClient();
+		Client c = Client.getClient();
 		this.setBackground(BKG);
 		this.dimen=new Dimension(870, 600);
 		this.setPreferredSize(dimen);
@@ -54,11 +54,12 @@ public class PanelInicio extends JPanel{
 							}
 							else {
 								//COMPARA CON BBD. SI NOMBRE VALIDO, CAMBIA DE VENTANA.######
-								//validUsername=c.tryLogin(tryUser);
-								validUsername=true;//testing
+								validUsername=c.tryLogin(tryUser);
+								//validUsername=true;//testing
 								if(validUsername) {
 									setVisible(false);
 									FrameUserSelector fus= new FrameUserSelector();
+									//TODO CERRAR VENTANA
 									
 								}else {
 									JOptionPane.showMessageDialog(null, "Please Select another name, this is already taken. ");
@@ -106,4 +107,3 @@ public class PanelInicio extends JPanel{
 		this.add(jLab3);
 	}
 }
-

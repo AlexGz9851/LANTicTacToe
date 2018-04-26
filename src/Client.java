@@ -11,7 +11,7 @@ public class Client {
     private Client() 
     {
 		try {
-			this.connection = new Socket("192.168.1.34", 8081);
+			this.connection = new Socket("192.168.43.165", 8081);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

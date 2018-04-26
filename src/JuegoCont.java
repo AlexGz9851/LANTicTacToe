@@ -233,5 +233,27 @@ public class JuegoCont {
 		this.pj.getGato('C').setJc(this);
 		this.cleanCells();//METODO NO TERMINADO, SET CELLS STATUS IN 'N'
 		this.pj.repaint();
+		if(!whoStart) {
+			boolean end2;
+			JsonObject moveBack =this.client.read();//waiting data
+			Action action = Action.getValue(moveBack.get("action").getAsString());
+			String from = moveBack.get("from").getAsString();
+			String data;
+			try {
+				data = moveBack.get("data").getAsString();
+			}
+			catch(IllegalStateException ex) {
+				data = null;
+			}
+			
+			
+			if(action == Action.TURNO) {
+
+				char letraReaded =data.charAt(0);
+				int numeroReaded= data.charAt(1)-(int)('0');
+				end2=this.calculate(numeroReaded, letraReaded, turno);//calculates the move back.
+				this.pj.repaint();
+			}
+		}
 	}
 }
