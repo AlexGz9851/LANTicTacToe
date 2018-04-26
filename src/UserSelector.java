@@ -113,6 +113,9 @@ public class UserSelector extends JPanel implements ActionListener{
 								Random r = new Random();
 								Boolean starting = r.nextInt(2) == 0;		
 								self.client.setOpponent(from);
+								JsonObject start = new JsonObject();
+								data.add("start", new JsonPrimitive(starting));
+								client.send(self.client.getOpponent(), Action.INICIOJUEGO, start);
 								self.gameStart(starting);
 								break;
 							}
@@ -160,7 +163,6 @@ public class UserSelector extends JPanel implements ActionListener{
 	
 	private void gameStart(boolean who) {
 		if(who) {
-			client.send(this.client.getOpponent(), Action.INICIOJUEGO, null);
 			//TODO open tictactoe window and the current player starts (will be the first to send message)
 		}
 		else {
