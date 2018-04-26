@@ -1,3 +1,5 @@
+import java.util.Random;
+
 import javax.swing.JOptionPane;
 
 import com.google.gson.JsonObject;
@@ -36,6 +38,8 @@ public class JuegoCont {
 		
 		vj= new VentanaJuego();
 		this.pj=vj.getPj();
+		
+		this.cleanCells();
 		
 		this.pj.setUsuario((whoStart)?j1:j2);
 		this.pj.setOponente((whoStart)?j2:j1);
@@ -99,9 +103,30 @@ public class JuegoCont {
 					}else {
 						//oponent wins
 						this.turno=false;
-						JOptionPane.showConfirmDialog(null, "You lose! Do you wanna play again?");
-						//Iván has tu magia. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-						//DISPOSE VJ, OPEN CHOOSE USER FRAME. O INICIAR NUEVO JUEGO CON MISMO USUARIO.
+						int answer = JOptionPane.showConfirmDialog(null, "You lose! Do you wanna play again?", "Play again?", JOptionPane.YES_NO_OPTION);
+						boolean playAgain = answer==JOptionPane.YES_OPTION;
+						JsonObject valueToSend = new JsonObject();
+						valueToSend.add("playAgain", new JsonPrimitive(playAgain));
+						this.client.send(client.getOpponent(), Action.FINJUEGO, valueToSend);
+						if(playAgain) {
+							JsonObject newGameRequest = this.client.read();
+							if(newGameRequest.get("data").getAsJsonObject().get("playAgain").getAsBoolean()) {
+								Boolean starting = new Random().nextInt(2) == 0;		
+								this.client.setOpponent(from);
+								JsonObject start = new JsonObject();
+								start.add("start", new JsonPrimitive(starting));
+								client.send(this.client.getOpponent(), Action.INICIOJUEGO, start);
+								// TODO restart this class, dispose currently active windows
+							}
+							else {
+								JOptionPane.showMessageDialog(null, "The other player does't want to play again, sorry :c.");
+								//TODO dispose windows and open user selector
+							}
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "You lose! Thanks for playing!");
+							//TODO dispose windows and open user selector
+						}
 					}
 				}
 				
@@ -111,9 +136,28 @@ public class JuegoCont {
 			}else {
 				//client win
 				this.turno=false;
-				JOptionPane.showConfirmDialog(null, "You win! Do you wanna play again?");
-				//Iván has tu magia. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-				//DISPOSE VJ, OPEN CHOOSE USER FRAME. O INICIAR NUEVO JUEGO CON MISMO USUARIO.
+				JsonObject playAgain = this.client.read();
+				if(playAgain.get("data").getAsJsonObject().get("playAgain").getAsBoolean()) {
+					int answer = JOptionPane.showConfirmDialog(null, "You win! Do you wanna play again?", "Play again?", JOptionPane.YES_NO_OPTION);
+					boolean playAgain2 = answer==JOptionPane.YES_OPTION;
+					JsonObject valueToSend = new JsonObject();
+					valueToSend.add("playAgain", new JsonPrimitive(playAgain2));
+					this.client.send(client.getOpponent(), Action.GAMEREQUEST, valueToSend);
+					if(playAgain2) {
+						JsonObject newGameRequest = this.client.read();
+						boolean starting = !newGameRequest.get("data").getAsJsonObject().get("start").getAsBoolean();
+						// TODO create here the constructor
+						// Dispose windows
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "The other player does't want to play again, Thanks for playing.");	
+						//TODO dispose windows and open user selector
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "You Win! The other player does't want to play again, sorry :c.");
+					//TODO dispose windows and open user selector
+				}
 			}
 		}
 	}
@@ -166,8 +210,12 @@ public class JuegoCont {
 		else
 			return false;
 	}
+	
 	public void cleanCells() {
-		//clean cells. Set all cell's status in 'N'
-		//SI QUIERES HACERLO IVAN, LO AGRADECERIA. ES TRIVIAL, SET ALL CELLS' STATUS IN 'N'.
+		for(char b : new char[] {'A', 'B', 'C'}) {
+			for(int i = 0; i < 9; i++)
+				this.pj.getGato(b).getCelda(i).setEstado('N');
+		}
+		
 	}
 }

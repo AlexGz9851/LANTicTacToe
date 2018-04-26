@@ -114,7 +114,7 @@ public class UserSelector extends JPanel implements ActionListener{
 								Boolean starting = r.nextInt(2) == 0;		
 								self.client.setOpponent(from);
 								JsonObject start = new JsonObject();
-								data.add("start", new JsonPrimitive(starting));
+								start.add("start", new JsonPrimitive(starting));
 								client.send(self.client.getOpponent(), Action.INICIOJUEGO, start);
 								self.gameStart(starting);
 								break;
@@ -162,8 +162,6 @@ public class UserSelector extends JPanel implements ActionListener{
 	}
 	
 	private void gameStart(boolean who) {
-		String j1= client.getUser();
-		String j2= client.getOpponent();
 		JuegoCont jc= new JuegoCont(who, client);
 	}
 }
