@@ -7,28 +7,28 @@ public class Celda {
 	private static final Color BKG=new Color(39,40,34);
 	private int largo,
 				x0,y0;
-	private String estado;
-	public Celda(int x0,int y0,int largo,String estado) {
+	private char estado;
+	public Celda(int x0,int y0,int largo,char estado) {
 		this.estado=estado;
 		this.largo=largo;
 		this.x0=x0;
 		this.y0=y0;
 	}
 	public Celda(int x0,int y0,int largo) {
-		this.estado="";
+		this.estado='N';//Default state.
 		this.largo=largo;
 		this.x0=x0;
 		this.y0=y0;
 	}
 	public void paintComponent(Graphics g) {
 
-		if(estado.equals("O")) {
+		if(estado=='O') {
 			g.setColor(OCOLOR);
 			g.fillOval(x0+(int)(0.15*largo), y0+(int)(0.15*largo), (int)(0.7*largo), (int)(0.7*largo));
 			g.setColor(BKG);
 			g.fillOval(x0+(int)(0.25*largo), y0+(int)(0.25*largo), (int)(0.5*largo), (int)(0.5*largo));
 			
-		}else if(estado.equals("X")) {
+		}else if(estado=='X') {
 			g.setColor(XCOLOR);
 			g.fillRect(x0+(int)(0.15*largo), y0+(int)(0.15*largo), (int)(0.7*largo), (int)(0.7*largo));
 			g.setColor(BKG);
@@ -36,10 +36,10 @@ public class Celda {
 			
 		}
 	}
-	public String getEstado() {
+	public char getEstado() {
 		return estado;
 	}
-	public void setEstado(String estado) {
+	public void setEstado(char estado) {
 		this.estado = estado;
 	}
 

@@ -7,9 +7,9 @@ public class GatoBoard {
 				anchoBar,
 				largoCell;
 	private JuegoCont jc;
-	private String nombre;
+	private char nombre;
 	private Celda[] celdas;
-	public GatoBoard(String nombre,int x0, int y0, int largo) {
+	public GatoBoard(char nombre,int x0, int y0, int largo) {
 		celdas= new Celda[9];
 		this.largo=largo;
 		this.y0=y0;
@@ -52,6 +52,9 @@ public class GatoBoard {
 	}
 	public void setJc(JuegoCont jc) {
 		this.jc = jc;
+	}
+	public Celda getCelda(int nCelda) {
+		return celdas[nCelda];
 	}
 	
 }

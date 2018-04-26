@@ -43,9 +43,9 @@ public class PanelJuego extends JPanel implements MouseListener{
 		this.xB=lenghtG+2*margen;
 		this.xC=2*lenghtG+3*margen;
 		yTodos=200;
-		this.gatoA= new GatoBoard("A",xA, yTodos,lenghtG);
-		this.gatoB= new GatoBoard("B",xB, yTodos,lenghtG);
-		this.gatoC= new GatoBoard("C",xC, yTodos,lenghtG);
+		this.gatoA= new GatoBoard('A',xA, yTodos,lenghtG);
+		this.gatoB= new GatoBoard('B',xB, yTodos,lenghtG);
+		this.gatoC= new GatoBoard('C',xC, yTodos,lenghtG);
 		this.addMouseListener(this);
 		this.setPreferredSize(dimen);
 		this.setBackground(BKG);
@@ -157,15 +157,15 @@ public class PanelJuego extends JPanel implements MouseListener{
 		this.boardEnable = boardEnable;
 	}
 
-	public GatoBoard getGatoA() {
-		return gatoA;
-	}
-
-	public GatoBoard getGatoB() {
-		return gatoB;
-	}
-
-	public GatoBoard getGatoC() {
-		return gatoC;
+	public GatoBoard getGato(char board) {
+		if(board=='A') {
+			return gatoA;
+		}else if(board=='B') {
+			return gatoB;
+		}else if(board=='C') {
+			return gatoC;
+		}else {
+			return null;
+		}
 	}
 }
