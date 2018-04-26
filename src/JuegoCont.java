@@ -81,6 +81,7 @@ public class JuegoCont {
 						this.turno=true;
 						this.pj.setBoardEnable(turno);
 						this.pj.setTurno((turno)?j1:j2);
+						this.pj.repaint();
 					}else {
 						//oponent wins
 						this.turno=false;
@@ -257,6 +258,7 @@ public class JuegoCont {
 					this.turno=true;
 					this.pj.setBoardEnable(turno);
 					this.pj.setTurno((turno)?j1:j2);
+					this.pj.repaint();
 				}
 			}
 		}
