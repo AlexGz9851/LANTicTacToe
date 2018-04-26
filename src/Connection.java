@@ -79,7 +79,7 @@ public class Connection extends Thread{
                 	{
                 		String value = keys.nextElement();
                 		if(!value.equals(this.user))
-                		users[i] = keys.nextElement();
+                		users[i] = value;
                 	}
                 	JsonObject data = new JsonObject();
                 	JsonPrimitive userList = new JsonPrimitive(new Gson().toJson(users));
@@ -88,12 +88,17 @@ public class Connection extends Thread{
                 	msg.sendMessage();
                 	break;
                 case GAMEREQUEST:
+                	try {
                 	User user = connectionMap.get(json.get("to").getAsString());
                 	if(user.isBusy()) {
                 		new Message("server", null, Action.ERROR, null, this.socket).sendMessage();
                 	}
                 	else
                 		this.reSend(json);
+                	}
+                	catch(UnsupportedOperationException ex) {
+                		System.out.println(ex.getMessage());
+                	}
                 	break;
                 case INICIOJUEGO:
                 	connectionMap.get(json.get("to").getAsString()).setBusy();

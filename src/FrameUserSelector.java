@@ -31,6 +31,7 @@ public class FrameUserSelector  extends JFrame{
 		
 	}
 	public static void main(String[] args) {
+		Client.getClient().tryLogin("test"); 
 		FrameUserSelector fus= new FrameUserSelector();
 	}
 
