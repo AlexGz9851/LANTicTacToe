@@ -30,14 +30,12 @@ public class PanelInicio extends JPanel{
 	private JTextField tfEntradaNombre;
 	private JLabel jLab,jLab2,jLab3;
 	private Image imgGato;
-	private PanelJuego pj;
 	private Client client;
 	
-	public PanelInicio(PanelJuego pj) {
+	public PanelInicio() {
 		//Constructor panel
 		super();
 		//Client c = Client.getClient();
-		this.pj=pj;
 		this.setBackground(BKG);
 		this.dimen=new Dimension(870, 600);
 		this.setPreferredSize(dimen);
@@ -60,7 +58,7 @@ public class PanelInicio extends JPanel{
 								validUsername=true;//testing
 								if(validUsername) {
 									setVisible(false);
-									pj.setVisible(true);	//testin'. this shit is not working.
+									UserSelector us= new UserSelector();
 									
 								}else {
 									JOptionPane.showMessageDialog(null, "Please Select another name, this is already taken. ");
