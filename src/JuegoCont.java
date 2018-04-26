@@ -64,7 +64,7 @@ public class JuegoCont {
 				String from = moveBack.get("from").getAsString();
 				String data;
 				try {
-					data = moveBack.get("data").getAsString();
+					data = moveBack.get("data").getAsJsonObject().get("celda").getAsString();
 				}
 				catch(IllegalStateException ex) {
 					data = null;
