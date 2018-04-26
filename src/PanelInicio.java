@@ -58,7 +58,7 @@ public class PanelInicio extends JPanel{
 								validUsername=true;//testing
 								if(validUsername) {
 									setVisible(false);
-									UserSelector us= new UserSelector();
+									FrameUserSelector fus= new FrameUserSelector();
 									
 								}else {
 									JOptionPane.showMessageDialog(null, "Please Select another name, this is already taken. ");

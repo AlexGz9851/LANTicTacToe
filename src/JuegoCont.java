@@ -31,33 +31,14 @@ public class JuegoCont {
 	Client client;
 	String j1,j2;
 	public JuegoCont(boolean whoStart,Client client) {
-		this.client=client;
-		j1=this.client.getUser();
-		j2=this.client.getOpponent();
-		this.turno=whoStart;
-		
-		vj= new VentanaJuego();
-		this.pj=vj.getPj();
-		
-		this.cleanCells();
-		
-		this.pj.setUsuario((whoStart)?j1:j2);
-		this.pj.setOponente((whoStart)?j2:j1);
-		this.pj.setTurno((whoStart)?j1:j2);
-		this.pj.setBoardEnable(whoStart);
-		
-		this.pj.getGato('A').setJc(this);
-		this.pj.getGato('B').setJc(this);
-		this.pj.getGato('C').setJc(this);
-		this.cleanCells();//METODO NO TERMINADO, SET CELLS STATUS IN 'N'
-		this.pj.repaint();
+		this.setPJ( whoStart, client);
 	}
 	
 	public void move(int numeroSend, char letraBoardSend) {
 		String celda=letraBoardSend+""+numeroSend;
 		boolean end,end2;
 		end=end2=false;
-		boolean valido,valido2;
+		boolean valido;
 		
 		valido=this.validateMove(numeroSend, letraBoardSend);
 		
@@ -117,15 +98,21 @@ public class JuegoCont {
 								start.add("start", new JsonPrimitive(starting));
 								client.send(this.client.getOpponent(), Action.INICIOJUEGO, start);
 								// TODO restart this class, dispose currently active windows
+								this.setPJ(starting, client);
+								
 							}
 							else {
 								JOptionPane.showMessageDialog(null, "The other player does't want to play again, sorry :c.");
 								//TODO dispose windows and open user selector
+								FrameUserSelector fus= new FrameUserSelector();
+								this.vj.dispose();
 							}
 						}
 						else {
 							JOptionPane.showMessageDialog(null, "You lose! Thanks for playing!");
 							//TODO dispose windows and open user selector
+								FrameUserSelector fus= new FrameUserSelector();
+								this.vj.dispose();
 						}
 					}
 				}
@@ -147,16 +134,22 @@ public class JuegoCont {
 						JsonObject newGameRequest = this.client.read();
 						boolean starting = !newGameRequest.get("data").getAsJsonObject().get("start").getAsBoolean();
 						// TODO create here the constructor
-						// Dispose windows
+						// Dispose windows... doesn´t neeeded dispose anything
+						this.setPJ(starting, client);
+						
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "The other player does't want to play again, Thanks for playing.");	
 						//TODO dispose windows and open user selector
+						FrameUserSelector fus= new FrameUserSelector();
+						this.vj.dispose();
 					}
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "You Win! The other player does't want to play again, sorry :c.");
 					//TODO dispose windows and open user selector
+					FrameUserSelector fus= new FrameUserSelector();
+					this.vj.dispose();
 				}
 			}
 		}
@@ -218,5 +211,27 @@ public class JuegoCont {
 				this.pj.getGato(b).getCelda(i).setEstado('N');
 		}
 		
+	}
+	public void setPJ(boolean whoStart,Client client) {
+		this.client=client;
+		j1=this.client.getUser();
+		j2=this.client.getOpponent();
+		this.turno=whoStart;
+		
+		vj= new VentanaJuego();
+		this.pj=vj.getPj();
+		
+		this.cleanCells();
+		
+		this.pj.setUsuario((whoStart)?j1:j2);
+		this.pj.setOponente((whoStart)?j2:j1);
+		this.pj.setTurno((whoStart)?j1:j2);
+		this.pj.setBoardEnable(whoStart);
+		
+		this.pj.getGato('A').setJc(this);
+		this.pj.getGato('B').setJc(this);
+		this.pj.getGato('C').setJc(this);
+		this.cleanCells();//METODO NO TERMINADO, SET CELLS STATUS IN 'N'
+		this.pj.repaint();
 	}
 }
