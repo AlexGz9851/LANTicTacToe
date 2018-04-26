@@ -26,4 +26,6 @@ public class User {
 	public Socket getSocket() {
 		return this.socket;
 	}
+	
+	public boolean isBusy() {return this.status;}
 }

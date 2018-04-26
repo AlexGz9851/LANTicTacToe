@@ -16,6 +16,7 @@ import java.util.Random;
 
 import javax.swing.JButton;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -130,6 +131,14 @@ public class UserSelector extends JPanel implements ActionListener{
 						self.gameStart(!data.get("start").getAsBoolean());
 						break;
 					}
+					else if(action == Action.USERLIST) {
+						self.cbUserList.removeAll();
+						for(String item : new Gson().fromJson(data.get("userList").getAsString(), String[].class))
+							self.cbUserList.addItem(item);
+					}
+					else if(action == Action.ERROR) {
+						JOptionPane.showMessageDialog(null, "The selected player is currently in a game, please select another or wait and try again.");
+					}
 				}
 			}
 		};
@@ -143,15 +152,7 @@ public class UserSelector extends JPanel implements ActionListener{
 			this.setEnabled(false);
 			this.client.send((String)this.cbUserList.getSelectedItem(), Action.GAMEREQUEST, null);
 		}else {
-			//Aqui agregue lo necesario para el refresh.
-			//IVAAAAAAAAAAN
-			//.....................................................................................
-			//
-			//Cabalga rapidamente entre los valles, deja correr tus instintos y hazle caso a tu intuición. 
-			//El retumbar de tu cabeza cesará parcialmente haciendo tregua, 
-			//es el momento ideal para ir de caza por todos tus sueños, alimentar la esperanza y eliminar tus miedos.
-			//Los edificios se mantienen en silencio, callando las historias que guardan en su estructura,
-			//secretos que permanecerán entre sus paredes. Mantendrán a salvo la intimidad de los seres que habitan en su interior
+			client.send(null, Action.USERLIST, null);
 		}
 	}
 	

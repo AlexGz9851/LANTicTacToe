@@ -1,6 +1,7 @@
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.Socket;
 import java.util.Enumeration;
@@ -67,13 +68,11 @@ public class Connection extends Thread{
             {
                 json = Message.readMessage(socket);
                 Action action = Action.getValue(json.get("action").getAsString());
-                if(action == Action.LOGOUT)
-                {
-                    logOut();
-                    break;
-                }
-                else if(action == Action.USERLIST)
-                {
+                switch(action) {
+                case LOGOUT:
+                	logOut();
+                	break;
+                case USERLIST:
                 	Enumeration<String> keys =this.connectionMap.keys();
                 	String[] users = new String[this.connectionMap.size()];
                 	for(int i = 0; keys.hasMoreElements(); i++)
@@ -87,15 +86,30 @@ public class Connection extends Thread{
                 	data.add("userList", userList);
                 	Message msg = new Message("server", null, Action.USERLIST, data, this.socket);
                 	msg.sendMessage();
+                	break;
+                case GAMEREQUEST:
+                	User user = connectionMap.get(json.get("to").getAsString());
+                	if(user.isBusy()) {
+                		new Message("server", null, Action.ERROR, null, this.socket).sendMessage();
+                	}
+                	else
+                		this.reSend(json);
+                	break;
+                case INICIOJUEGO:
+                	connectionMap.get(json.get("to").getAsString()).setBusy();
+                	connectionMap.get(json.get("from").getAsString()).setBusy();
+                	this.reSend(json);
+                	break;
+                case FINJUEGO:
+                	connectionMap.get(json.get("to").getAsString()).setFree();
+                	connectionMap.get(json.get("from").getAsString()).setFree();
+                	this.reSend(json);
+                	break;
+                default:
+                	this.reSend(json);
+                	break;
                 }
-                else {
-                    String to = json.get("to").getAsString();
-                    Writer out = new BufferedWriter(new OutputStreamWriter(
-                       connectionMap.get(to).getSocket().getOutputStream(), "UTF8"));
-                    out.append(json.toString());
-                    out.append((char)0);
-                    out.flush();
-                }
+
             }
             catch(IOException e)
             {
@@ -110,6 +124,14 @@ public class Connection extends Thread{
         }
     }
     
+    private void reSend(JsonObject json) throws UnsupportedEncodingException, IOException {
+    	String to = json.get("to").getAsString();
+        Writer out = new BufferedWriter(new OutputStreamWriter(
+           connectionMap.get(to).getSocket().getOutputStream(), "UTF8"));
+        out.append(json.toString());
+        out.append((char)0);
+        out.flush();
+    }
     
     private void logOut()
     {

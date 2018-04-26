@@ -162,6 +162,7 @@ public class JuegoCont {
 			}
 		}
 	}
+	
 	public boolean calculate(int numeroCelda, char letraBoard, boolean turno) {
 		char setCheckStatus;
 		//Host siempre será O y opponent será X.
