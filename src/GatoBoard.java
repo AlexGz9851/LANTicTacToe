@@ -47,5 +47,11 @@ public class GatoBoard {
 			jc.move(nCelda,this.nombre); //cambio de estado, aparecer figura.
 		}
 	}
+	public JuegoCont getJc() {
+		return jc;
+	}
+	public void setJc(JuegoCont jc) {
+		this.jc = jc;
+	}
 	
 }

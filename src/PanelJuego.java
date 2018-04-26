@@ -20,6 +20,7 @@ public class PanelJuego extends JPanel implements MouseListener{
 	private String usuario,
 				   oponente,
 				   turno;
+	private boolean boardEnable;
 	private int xMo, yMo,	//coordenada de click
 				xA, yTodos,//coordenadas de los boards en panel.
 				xB,
@@ -32,6 +33,7 @@ public class PanelJuego extends JPanel implements MouseListener{
 	
 	public PanelJuego() {
 		super();
+		boardEnable=true;
 		this.setLayout(null);
 		this.newGame= new Button("New game");
 		this.dimen=new Dimension(870, 600);
@@ -72,6 +74,7 @@ public class PanelJuego extends JPanel implements MouseListener{
 
 		this.add(newGame);
 	}
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.WHITE);
@@ -113,20 +116,21 @@ public class PanelJuego extends JPanel implements MouseListener{
 	}
 	public void enviarCordAGato(int x,int y) {
 		int tablero, xG, yG;
-		
-		tablero=x/(this.lenghtG+this.margen);
-		xG=x%(this.lenghtG+this.margen);
-		if((xG>this.margen && y>=this.yTodos) && (y<(this.yTodos+this.lenghtG))) {
-			yG=y-200;
-			xG-=this.margen;
-			if(tablero==0) {
-				this.gatoA.setClick(xG, yG);//xG y yG manda las coordenadas relativas del click al gato.
-			}else if(tablero==1) {
-				this.gatoB.setClick(xG, yG);				
-			}else if(tablero==2) {
-				this.gatoC.setClick(xG, yG);
-			}else{
-				
+		if(boardEnable) {
+			tablero=x/(this.lenghtG+this.margen);
+			xG=x%(this.lenghtG+this.margen);
+			if((xG>this.margen && y>=this.yTodos) && (y<(this.yTodos+this.lenghtG))) {
+				yG=y-200;
+				xG-=this.margen;
+				if(tablero==0) {
+					this.gatoA.setClick(xG, yG);//xG y yG manda las coordenadas relativas del click al gato.
+				}else if(tablero==1) {
+					this.gatoB.setClick(xG, yG);				
+				}else if(tablero==2) {
+					this.gatoC.setClick(xG, yG);
+				}else{
+					
+				}
 			}
 		}
 	}
@@ -136,4 +140,32 @@ public class PanelJuego extends JPanel implements MouseListener{
 	public void setDimen(Dimension dimen) {
 		this.dimen = dimen;
 	}	
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+	public void setOponente(String oponente) {
+		this.oponente = oponente;
+	}
+	public void setTurno(String turno) {
+		this.turno = turno;
+	}
+
+	public boolean isBoardEnable() {
+		return boardEnable;
+	}
+	public void setBoardEnable(boolean boardEnable) {
+		this.boardEnable = boardEnable;
+	}
+
+	public GatoBoard getGatoA() {
+		return gatoA;
+	}
+
+	public GatoBoard getGatoB() {
+		return gatoB;
+	}
+
+	public GatoBoard getGatoC() {
+		return gatoC;
+	}
 }

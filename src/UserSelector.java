@@ -157,16 +157,13 @@ public class UserSelector extends JPanel implements ActionListener{
 	
 	private void acceptGameRequest(boolean value, String from) {
 		JsonObject dataToSend = new JsonObject();
-		dataToSend.add("accepted", new JsonPrimitive(value));;
+		dataToSend.add("accepted", new JsonPrimitive(value));
 		this.client.send(from, Action.GAMEREQUEST, dataToSend);
 	}
 	
 	private void gameStart(boolean who) {
-		if(who) {
-			//TODO open tictactoe window and the current player starts (will be the first to send message)
-		}
-		else {
-			// TODO open tictactoe window and the other player starts (will start with a disabled panel and waiting for message)
-		}
+		String j1= client.getUser();
+		String j2= client.getOpponent();
+		JuegoCont jc= new JuegoCont(who, client);
 	}
 }
