@@ -31,72 +31,78 @@ public class JuegoCont {
 	Client client;
 	String j1,j2;
 	
+	
 	public JuegoCont(boolean whoStart,Client client) {
 		this.setJC( whoStart, client);
 	}
 	
+	
 	public void move(int numeroSend, char letraBoardSend) {
-		
-		
-		String celda=letraBoardSend+""+numeroSend;
-		boolean end,end2;
-		end=end2=false;
-		boolean valido;
-		
-		valido=this.validateMove(numeroSend, letraBoardSend);
-		
-		if(valido) {
-			//send the cell as data.
-			end=this.calculate( numeroSend,letraBoardSend, turno);//set new state in current cell, calculates if game ends.
-			this.pj.repaint();
-			this.turno=false;
-			this.pj.setBoardEnable(turno); //disable the board.		
-			this.pj.setTurno((turno)?j1:j2);//changes turn name.
-			
-			this.pj.repaint();
-			
-			//sending data.
-			JsonObject dataToSend = new JsonObject();
-			dataToSend.add("celda", new JsonPrimitive(celda));
-			this.client.send(client.getOpponent(), Action.TURNO, dataToSend);
-
-			
-			if(!end) {
-				JsonObject moveBack =this.client.read();//waiting data
-				Action action = Action.getValue(moveBack.get("action").getAsString());
-				String from = moveBack.get("from").getAsString();
-				String data;
-				try {
-					data = moveBack.get("data").getAsJsonObject().get("celda").getAsString();
-				}
-				catch(IllegalStateException ex) {
-					data = null;
-				}
+		JuegoCont self = this;
+		Thread controller = new Thread() {
+			public void run() {
+				String celda=letraBoardSend+""+numeroSend;
+				boolean end,end2;
+				end=end2=false;
+				boolean valido;
 				
+				valido=self.validateMove(numeroSend, letraBoardSend);
 				
-				if(action == Action.TURNO) {
+				if(valido) {
+					//send the cell as data.
+					end=self.calculate( numeroSend,letraBoardSend, turno);//set new state in current cell, calculates if game ends.
+					self.pj.repaint();
+					self.turno=false;
+					self.pj.setBoardEnable(turno); //disable the board.		
+					self.pj.setTurno((turno)?j1:j2);//changes turn name.
+					
+					self.pj.repaint();
+					
+					//sending data.
+					JsonObject dataToSend = new JsonObject();
+					dataToSend.add("celda", new JsonPrimitive(celda));
+					self.client.send(client.getOpponent(), Action.TURNO, dataToSend);
 
-					char letraReaded =data.charAt(0);
-					int numeroReaded= data.charAt(1)-(int)('0');
-					end2=this.calculate(numeroReaded, letraReaded, turno);//calculates the move back.
-					this.pj.repaint();
-					if(!end2) {
-						this.turno=true;
-						this.pj.setBoardEnable(turno);
-						this.pj.setTurno((turno)?j1:j2);
-						this.pj.repaint();
+					
+					if(!end) {
+						JsonObject moveBack =self.client.read();//waiting data
+						Action action = Action.getValue(moveBack.get("action").getAsString());
+						String from = moveBack.get("from").getAsString();
+						String data;
+						try {
+							data = moveBack.get("data").getAsJsonObject().get("celda").getAsString();
+						}
+						catch(IllegalStateException ex) {
+							data = null;
+						}
+						
+						
+						if(action == Action.TURNO) {
+
+							char letraReaded =data.charAt(0);
+							int numeroReaded= data.charAt(1)-(int)('0');
+							end2=self.calculate(numeroReaded, letraReaded, turno);//calculates the move back.
+							self.pj.repaint();
+							if(!end2) {
+								self.turno=true;
+								self.pj.setBoardEnable(turno);
+								self.pj.setTurno((turno)?j1:j2);
+								self.pj.repaint();
+							}else {
+								//oponent wins
+								self.opponentWins(from);
+							}
+						}else if(action == Action.SURRENDER) {
+							//TODO recieving a surrender.
+							self.respondASurrender(from);
+						}
 					}else {
-						//oponent wins
-						this.opponentWins(from);
+						self.clientWins();
 					}
-				}else if(action == Action.SURRENDER) {
-					//TODO recieving a surrender.
-					this.respondASurrender(from);
 				}
-			}else {
-				this.clientWins();
 			}
-		}
+		};
+		controller.start();
 	}
 	
 	private boolean calculate(int numeroCelda, char letraBoard, boolean turno) {

@@ -44,7 +44,7 @@ public class GatoBoard {
 		xC=x%(this.largoCell+this.anchoBar);
 		yC=y%(this.largoCell+this.anchoBar);
 		if(xC<this.largoCell && yC<this.largoCell) {
-			jc.move(nCelda,this.nombre); //cambio de estado, aparecer figura.
+			jc.move(nCelda, this.nombre); //cambio de estado, aparecer figura.
 		}
 	}
 	public JuegoCont getJc() {
