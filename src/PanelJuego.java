@@ -30,9 +30,11 @@ public class PanelJuego extends JPanel implements MouseListener{
 	private Dimension dimen;
 	private Button newGame;
 	private static final Color OCOLOR= new Color(102, 217, 239);
-	
+	private JuegoCont jc;
 	public PanelJuego() {
 		super();
+		
+
 		boardEnable=true;
 		this.setLayout(null);
 		this.newGame= new Button("New game");
@@ -57,18 +59,14 @@ public class PanelJuego extends JPanel implements MouseListener{
 		font=new Font("Arial",Font.BOLD,40);
 		this.newGame.addActionListener( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean win=false;//para testeo, la señal la enviará el controlador. checar
-				int out;
-				if(!win) {
-					out=JOptionPane.showConfirmDialog(PanelJuego.this, "Are you sure? This game gonna be considered as lost.");
-					if(out==JOptionPane.YES_OPTION) {
-						
-					}else{
-						
+				int surrender;
+				if (boardEnable) {
+					surrender=JOptionPane.showConfirmDialog(null, "Are you sure? This game gonna be considered as lost.");
+					if(surrender==JOptionPane.YES_OPTION) {
+						jc.surrender();
 					}
-				}else {
-					
 				}
+
 			}
 		});
 
@@ -167,5 +165,27 @@ public class PanelJuego extends JPanel implements MouseListener{
 		}else {
 			return null;
 		}
+	}
+
+	
+	public JuegoCont getJc() {
+		return jc;
+	}
+
+	public void setJc(JuegoCont jc) {
+		this.jc = jc;
+	}
+	public void setControllerOnBoards() {
+		this.getGato('A').setJc(jc);
+		this.getGato('B').setJc(jc);
+		this.getGato('C').setJc(jc);
+	}
+
+	public Button getNewGame() {
+		return newGame;
+	}
+
+	public void setNewGame(Button newGame) {
+		this.newGame = newGame;
 	}
 }

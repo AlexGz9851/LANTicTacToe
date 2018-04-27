@@ -30,11 +30,14 @@ public class JuegoCont {
 	VentanaJuego vj;
 	Client client;
 	String j1,j2;
+	
 	public JuegoCont(boolean whoStart,Client client) {
-		this.setPJ( whoStart, client);
+		this.setJC( whoStart, client);
 	}
 	
 	public void move(int numeroSend, char letraBoardSend) {
+		
+		
 		String celda=letraBoardSend+""+numeroSend;
 		boolean end,end2;
 		end=end2=false;
@@ -84,79 +87,19 @@ public class JuegoCont {
 						this.pj.repaint();
 					}else {
 						//oponent wins
-						this.turno=false;
-						int answer = JOptionPane.showConfirmDialog(null, "You lose! Do you wanna play again?", "Play again?", JOptionPane.YES_NO_OPTION);
-						boolean playAgain = answer==JOptionPane.YES_OPTION;
-						JsonObject valueToSend = new JsonObject();
-						valueToSend.add("playAgain", new JsonPrimitive(playAgain));
-						this.client.send(client.getOpponent(), Action.FINJUEGO, valueToSend);
-						if(playAgain) {
-							JsonObject newGameRequest = this.client.read();
-							if(newGameRequest.get("data").getAsJsonObject().get("playAgain").getAsBoolean()) {
-								Boolean starting = new Random().nextInt(2) == 0;		
-								this.client.setOpponent(from);
-								JsonObject start = new JsonObject();
-								start.add("start", new JsonPrimitive(starting));
-								client.send(this.client.getOpponent(), Action.INICIOJUEGO, start);
-								// TODO restart this class, dispose currently active windows
-								this.setPJ(starting, client);
-								
-							}
-							else {
-								JOptionPane.showMessageDialog(null, "The other player does't want to play again, sorry :c.");
-								//TODO dispose windows and open user selector
-								FrameUserSelector fus= new FrameUserSelector();
-								this.vj.dispose();
-							}
-						}
-						else {
-							JOptionPane.showMessageDialog(null, "You lose! Thanks for playing!");
-							//TODO dispose windows and open user selector
-								FrameUserSelector fus= new FrameUserSelector();
-								this.vj.dispose();
-						}
+						this.opponentWins(from);
 					}
+				}else if(action == Action.SURRENDER) {
+					//TODO recieving a surrender.
+					this.respondASurrender(from);
 				}
-				
-				
-		
-		
 			}else {
-				//client win
-				this.turno=false;
-				JsonObject playAgain = this.client.read();
-				if(playAgain.get("data").getAsJsonObject().get("playAgain").getAsBoolean()) {
-					int answer = JOptionPane.showConfirmDialog(null, "You win! Do you wanna play again?", "Play again?", JOptionPane.YES_NO_OPTION);
-					boolean playAgain2 = answer==JOptionPane.YES_OPTION;
-					JsonObject valueToSend = new JsonObject();
-					valueToSend.add("playAgain", new JsonPrimitive(playAgain2));
-					this.client.send(client.getOpponent(), Action.GAMEREQUEST, valueToSend);
-					if(playAgain2) {
-						JsonObject newGameRequest = this.client.read();
-						boolean starting = !newGameRequest.get("data").getAsJsonObject().get("start").getAsBoolean();
-						// TODO create here the constructor
-						// Dispose windows... doesn´t neeeded dispose anything
-						this.setPJ(starting, client);
-						
-					}
-					else {
-						JOptionPane.showMessageDialog(null, "The other player does't want to play again, Thanks for playing.");	
-						//TODO dispose windows and open user selector
-						FrameUserSelector fus= new FrameUserSelector();
-						this.vj.dispose();
-					}
-				}
-				else {
-					JOptionPane.showMessageDialog(null, "You Win! The other player does't want to play again, sorry :c.");
-					//TODO dispose windows and open user selector
-					FrameUserSelector fus= new FrameUserSelector();
-					this.vj.dispose();
-				}
+				this.clientWins();
 			}
 		}
 	}
 	
-	public boolean calculate(int numeroCelda, char letraBoard, boolean turno) {
+	private boolean calculate(int numeroCelda, char letraBoard, boolean turno) {
 		char setCheckStatus;
 		//Host siempre será O y opponent será X.
 		if(turno) {
@@ -190,7 +133,7 @@ public class JuegoCont {
 		return someoneWin;
 	}
 
-	public boolean validateMove(int numeroCelda, char letraBoard) {
+	private boolean validateMove(int numeroCelda, char letraBoard) {
 		//validates if user clicked in a empty cell. 
 		char status;
 		if(letraBoard=='A'||letraBoard=='B'||letraBoard=='C') {
@@ -206,22 +149,26 @@ public class JuegoCont {
 			return false;
 	}
 	
-	public void cleanCells() {
+	private void cleanCells() {
 		for(char b : new char[] {'A', 'B', 'C'}) {
 			for(int i = 0; i < 9; i++)
 				this.pj.getGato(b).getCelda(i).setEstado('N');
 		}
 		
 	}
-	public void setPJ(boolean whoStart,Client client) {
+	
+	public void setJC(boolean whoStart,Client client) {
+
 		this.client=client;
 		j1=this.client.getUser();
 		j2=this.client.getOpponent();
 		this.turno=whoStart;
 		
 		vj= new VentanaJuego();
+		this.pj.setJc(this);
 		this.pj=vj.getPj();
-		
+		this.pj.setControllerOnBoards();
+
 		this.cleanCells();
 		
 		this.pj.setUsuario((whoStart)?j1:j2);
@@ -229,16 +176,13 @@ public class JuegoCont {
 		this.pj.setTurno((whoStart)?j1:j2);
 		this.pj.setBoardEnable(whoStart);
 		
-		this.pj.getGato('A').setJc(this);
-		this.pj.getGato('B').setJc(this);
-		this.pj.getGato('C').setJc(this);
+
 		this.cleanCells();//METODO NO TERMINADO, SET CELLS STATUS IN 'N'
 		this.pj.repaint();
 		if(!whoStart) {
 			boolean end2;
 			JsonObject moveBack =this.client.read();//waiting data
 			Action action = Action.getValue(moveBack.get("action").getAsString());
-			String from = moveBack.get("from").getAsString();
 			String data;
 			try {
 				data = moveBack.get("data").getAsJsonObject().get("celda").getAsString();
@@ -261,6 +205,85 @@ public class JuegoCont {
 					this.pj.repaint();
 				}
 			}
+		}
+	}
+	
+	public void respondASurrender(String fromx) {
+		this.playAgain( fromx,"win");
+	}
+	public void opponentWins(String fromx) {
+		this.playAgain( fromx,"lose");
+	}
+	public void playAgain(String fromx, String loseOrWin) {
+
+		this.turno=false;
+		int answer = JOptionPane.showConfirmDialog(null, "You "+loseOrWin+"! Do you wanna play again?", "Play again?", JOptionPane.YES_NO_OPTION);
+		boolean playAgain = answer==JOptionPane.YES_OPTION;
+		JsonObject valueToSend = new JsonObject();
+		valueToSend.add("playAgain", new JsonPrimitive(playAgain));
+		this.client.send(client.getOpponent(), Action.FINJUEGO, valueToSend);
+		if(playAgain) {
+			JsonObject newGameRequest = this.client.read();
+			if(newGameRequest.get("data").getAsJsonObject().get("playAgain").getAsBoolean()) {
+				Boolean starting = new Random().nextInt(2) == 0;		
+				this.client.setOpponent(fromx);
+				JsonObject start = new JsonObject();
+				start.add("start", new JsonPrimitive(starting));
+				client.send(this.client.getOpponent(), Action.INICIOJUEGO, start);
+				// TODO restart this class, dispose currently active windows
+				this.setJC(starting, client);
+				
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "The other player doesn't want to play again, sorry :c.");
+				//TODO dispose windows and open user selector
+				FrameUserSelector fus= new FrameUserSelector();
+				this.vj.dispose();
+			}
+		}else {
+			JOptionPane.showMessageDialog(null, "You "+loseOrWin+"! Thanks for playing!");
+			//TODO dispose windows and open user selector
+				FrameUserSelector fus= new FrameUserSelector();
+				this.vj.dispose();
+		}
+	}
+	
+	public void surrender() {
+		this.pj.setBoardEnable(false);
+		this.pj.getNewGame().setEnabled(false);
+		this.client.send(client.getOpponent(), Action.SURRENDER, new JsonObject());
+		//no se si enviar un surrender o un new game.
+	}
+	
+	public void clientWins() {
+		this.turno=false;
+		JsonObject playAgain = this.client.read();
+		if(playAgain.get("data").getAsJsonObject().get("playAgain").getAsBoolean()) {
+			int answer = JOptionPane.showConfirmDialog(null, "You win! Do you wanna play again?", "Play again?", JOptionPane.YES_NO_OPTION);
+			boolean playAgain2 = answer==JOptionPane.YES_OPTION;
+			JsonObject valueToSend = new JsonObject();
+			valueToSend.add("playAgain", new JsonPrimitive(playAgain2));
+			this.client.send(client.getOpponent(), Action.GAMEREQUEST, valueToSend);
+			if(playAgain2) {
+				JsonObject newGameRequest = this.client.read();
+				boolean starting = !newGameRequest.get("data").getAsJsonObject().get("start").getAsBoolean();
+				// TODO create here the constructor
+				// Dispose windows... doesn´t neeeded dispose anything
+				this.setJC(starting, client);
+				
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "The other player does't want to play again, Thanks for playing.");	
+				//TODO dispose windows and open user selector
+				FrameUserSelector fus= new FrameUserSelector();
+				this.vj.dispose();
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "You Win! The other player does't want to play again, sorry :c.");
+			//TODO dispose windows and open user selector
+			FrameUserSelector fus= new FrameUserSelector();
+			this.vj.dispose();
 		}
 	}
 }

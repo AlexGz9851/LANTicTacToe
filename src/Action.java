@@ -1,6 +1,6 @@
 
 public enum Action {
-	USERLIST("userList"), LOGOUT("logOut"), NEWUSER("newUser"), ERROR("error"), INICIOJUEGO("inicioJuego"), FINJUEGO("finJuego"), TURNO("turno"), OK("ok"), GAMEREQUEST("gameRequest");
+	SURRENDER("surrender"),USERLIST("userList"), LOGOUT("logOut"), NEWUSER("newUser"), ERROR("error"), INICIOJUEGO("inicioJuego"), FINJUEGO("finJuego"), TURNO("turno"), OK("ok"), GAMEREQUEST("gameRequest");
 	private String value;
 	
 	private Action(String value) {
