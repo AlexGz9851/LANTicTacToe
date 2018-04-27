@@ -61,7 +61,7 @@ public class PanelJuego extends JPanel implements MouseListener{
 			public void actionPerformed(ActionEvent e) {
 				int surrender;
 				if (boardEnable) {
-					surrender=JOptionPane.showConfirmDialog(null, "Are you sure? This game gonna be considered as lost.");
+					surrender=JOptionPane.showConfirmDialog(null, "Are you sure? This game gonna be considered as lost.", "", JOptionPane.YES_NO_OPTION);
 					if(surrender==JOptionPane.YES_OPTION) {
 						jc.surrender();
 					}

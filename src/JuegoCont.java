@@ -38,71 +38,80 @@ public class JuegoCont {
 	
 	
 	public void move(int numeroSend, char letraBoardSend) {
-		JuegoCont self = this;
 		Thread controller = new Thread() {
 			public void run() {
-				String celda=letraBoardSend+""+numeroSend;
-				boolean end,end2;
-				end=end2=false;
+				
+				boolean end;
 				boolean valido;
 				
-				valido=self.validateMove(numeroSend, letraBoardSend);
+				valido=validateMove(numeroSend, letraBoardSend);
 				
 				if(valido) {
-					//send the cell as data.
-					end=self.calculate( numeroSend,letraBoardSend, turno);//set new state in current cell, calculates if game ends.
-					self.pj.repaint();
-					self.turno=false;
-					self.pj.setBoardEnable(turno); //disable the board.		
-					self.pj.setTurno((turno)?j1:j2);//changes turn name.
-					
-					self.pj.repaint();
-					
-					//sending data.
-					JsonObject dataToSend = new JsonObject();
-					dataToSend.add("celda", new JsonPrimitive(celda));
-					self.client.send(client.getOpponent(), Action.TURNO, dataToSend);
-
+					end=sendData(numeroSend,letraBoardSend);
 					
 					if(!end) {
-						JsonObject moveBack =self.client.read();//waiting data
-						Action action = Action.getValue(moveBack.get("action").getAsString());
-						String from = moveBack.get("from").getAsString();
-						String data;
-
-						
-						
-						if(action == Action.TURNO) {
-							try {
-								data = moveBack.get("data").getAsJsonObject().get("celda").getAsString();
-							}
-							catch(IllegalStateException ex) {
-								data = null;
-							}
-							char letraReaded =data.charAt(0);
-							int numeroReaded= data.charAt(1)-(int)('0');
-							end2=self.calculate(numeroReaded, letraReaded, turno);//calculates the move back.
-							self.pj.repaint();
-							if(!end2) {
-								self.turno=true;
-								self.pj.setBoardEnable(turno);
-								self.pj.setTurno((turno)?j1:j2);
-								self.pj.repaint();
-							}else {
-								//oponent wins
-								self.opponentWins(from);
-							}
-						}else if(action == Action.SURRENDER) {
-							//TODO recieving a surrender.
-							self.respondASurrender(from);
-						}
+						moveBack();
 					}else {
-						self.clientWins();
+						clientWins();
 					}
 				}
 			}
 		};
 		controller.start();
+	}
+	private boolean sendData(int numeroSend,char letraBoardSend) {
+		boolean end;
+		//send the cell as data.
+		end=this.calculate( numeroSend,letraBoardSend, turno);//set new state in current cell, calculates if game ends.
+		this.pj.repaint();
+		this.turno=false;
+		this.pj.setBoardEnable(turno); //disable the board.		
+		this.pj.setTurno((turno)?j1:j2);//changes turn name.
+		
+		this.pj.repaint();
+		String celda=letraBoardSend+""+numeroSend;
+		//sending data.
+		JsonObject dataToSend = new JsonObject();
+		dataToSend.add("celda", new JsonPrimitive(celda));
+		this.client.send(client.getOpponent(), Action.TURNO, dataToSend);
+		return end;
+
+	}
+	
+	private void moveBack() {
+		boolean end2;
+
+		JsonObject moveBack =this.client.read();//waiting data
+		Action action = Action.getValue(moveBack.get("action").getAsString());
+		String from = moveBack.get("from").getAsString();
+		String data;
+
+		
+		
+		if(action == Action.TURNO) {
+			try {
+				data = moveBack.get("data").getAsJsonObject().get("celda").getAsString();
+			}
+			catch(IllegalStateException ex) {
+				data = null;
+			}
+			char letraReaded =data.charAt(0);
+			int numeroReaded= data.charAt(1)-(int)('0');
+			end2=this.calculate(numeroReaded, letraReaded, turno);//calculates the move back.
+			this.pj.repaint();
+			if(!end2) {
+				this.turno=true;
+				this.pj.setBoardEnable(turno);
+				this.pj.setTurno((turno)?j1:j2);
+				this.pj.repaint();
+			}else {
+				//oponent wins
+				this.opponentWins(from);
+			}
+		}else if(action == Action.SURRENDER) {
+			//TODO recieving a surrender.
+			this.respondASurrender(from);
+		}
 	}
 	
 	private boolean calculate(int numeroCelda, char letraBoard, boolean turno) {
@@ -187,37 +196,14 @@ public class JuegoCont {
 		this.cleanCells();//METODO NO TERMINADO, SET CELLS STATUS IN 'N'
 		this.pj.repaint();
 		if(!whoStart) {
-			boolean end2;
-			JsonObject moveBack =this.client.read();//waiting data
-			Action action = Action.getValue(moveBack.get("action").getAsString());
-			String data;
-			try {
-				data = moveBack.get("data").getAsJsonObject().get("celda").getAsString();
-			}
-			catch(IllegalStateException ex) {
-				data = null;
-			}
-			
-			
-			if(action == Action.TURNO) {
-
-				char letraReaded =data.charAt(0);
-				int numeroReaded= data.charAt(1)-(int)('0');
-				end2=this.calculate(numeroReaded, letraReaded, turno);//calculates the move back.
-				this.pj.repaint();
-				if(!end2) {
-					this.turno=true;
-					this.pj.setBoardEnable(turno);
-					this.pj.setTurno((turno)?j1:j2);
-					this.pj.repaint();
-				}
-			}
+			moveBack();
 		}
 	}
 	
 	public void respondASurrender(String fromx) {
 		this.playAgain( fromx,"win");
 	}
+	
 	public void opponentWins(String fromx) {
 		this.playAgain( fromx,"lose");
 	}

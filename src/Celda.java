@@ -29,15 +29,16 @@ public class Celda {
 			g.fillOval(x0+(int)(0.25*largo), y0+(int)(0.25*largo), (int)(0.5*largo), (int)(0.5*largo));
 			
 		}else if(estado=='X') {
-			int[] xPoints= {(int)(0.1*largo),(int)((1/3.0)*largo),(int)(0.1*largo),
-							(int)(.27*largo),(int)(0.5*largo),     (int)(0.73*largo),
-							(int)(.9*largo), (int)((2/3.0)*largo),(int)(0.9*largo),
-							(int)(.73*largo),(int)(0.5*largo),     (int)(.27*largo)};
+			int[] xPoints= {x0+(int)(0.1*largo),x0+(int)((1/3.0)*largo),x0+(int)(0.1*largo),
+					x0+(int)(.27*largo),x0+(int)(0.5*largo),     x0+(int)(0.73*largo),
+					x0+(int)(.9*largo), x0+(int)((2/3.0)*largo),x0+(int)(0.9*largo),
+					x0+(int)(.73*largo),x0+(int)(0.5*largo),  x0+   (int)(.27*largo)};
 			
-			int[] yPoints= {(int)(0.27*largo),(int)(.5*largo),(int)(0.73*largo),
-					(int)(0.9*largo),(int)((2/3.0)*largo),     (int)(0.9*largo),
-					(int)(0.73*largo), (int)(.5*largo),(int)(0.27*largo),
-					(int)(0.1*largo),(int)((1/3.0)*largo),     (int)(0.1*largo)};
+			int[] yPoints= { y0+(int)(0.27*largo), y0+(int)(.5*largo), y0+(int)(0.73*largo),
+					 y0+(int)(0.9*largo), y0+(int)((2/3.0)*largo),      y0+(int)(0.9*largo),
+					 y0+(int)(0.73*largo),  y0+(int)(.5*largo), y0+(int)(0.27*largo),
+					 y0+(int)(0.1*largo), y0+(int)((1/3.0)*largo),      y0+(int)(0.1*largo)};
+			
 			g.setColor(XCOLOR);
 			g.fillPolygon(xPoints, yPoints, 12);
 			//g.fillRect(x0+(int)(0.15*largo), y0+(int)(0.15*largo), (int)(0.7*largo), (int)(0.7*largo));
