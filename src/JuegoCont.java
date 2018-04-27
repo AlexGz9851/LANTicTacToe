@@ -165,8 +165,9 @@ public class JuegoCont {
 		this.turno=whoStart;
 		
 		vj= new VentanaJuego();
-		this.pj.setJc(this);
 		this.pj=vj.getPj();
+		this.pj.setJc(this);
+		
 		this.pj.setControllerOnBoards();
 
 		this.cleanCells();
