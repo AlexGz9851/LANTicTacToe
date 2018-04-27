@@ -69,16 +69,16 @@ public class JuegoCont {
 						Action action = Action.getValue(moveBack.get("action").getAsString());
 						String from = moveBack.get("from").getAsString();
 						String data;
-						try {
-							data = moveBack.get("data").getAsJsonObject().get("celda").getAsString();
-						}
-						catch(IllegalStateException ex) {
-							data = null;
-						}
+
 						
 						
 						if(action == Action.TURNO) {
-
+							try {
+								data = moveBack.get("data").getAsJsonObject().get("celda").getAsString();
+							}
+							catch(IllegalStateException ex) {
+								data = null;
+							}
 							char letraReaded =data.charAt(0);
 							int numeroReaded= data.charAt(1)-(int)('0');
 							end2=self.calculate(numeroReaded, letraReaded, turno);//calculates the move back.
