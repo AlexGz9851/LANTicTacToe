@@ -1,8 +1,10 @@
+import java.awt.BasicStroke;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -14,27 +16,34 @@ import javax.swing.JPanel;
 public class PanelJuego extends JPanel implements MouseListener{
 	private int margen; //ancho margen entre tableros
 	private static final Color BKG=new Color(39,40,34);
+	private static final Color XCOLORT= new Color(249, 38, 114,100);
+	private static final Color OCOLORT= new Color(102, 217, 239,100);
+	private static final Color ORCOLT= new Color(255,140,0,100);
 	private GatoBoard gatoA,
 					 gatoB,
 					 gatoC;
 	private String usuario,
 				   oponente,
 				   turno;
-	private boolean boardEnable;
+	private boolean boardEnable,someOneWin;
 	private int xMo, yMo,	//coordenada de click
 				xA, yTodos,//coordenadas de los boards en panel.
 				xB,
 				xC,
-				lenghtG;
+				lenghtG,
+				x1,x2,y1,y2;
 	private Font font,fontB;
 	private Dimension dimen;
 	private Button newGame;
 	private static final Color OCOLOR= new Color(102, 217, 239);
+	private static final Color ORCOL= new Color(255,140,0);
 	private JuegoCont jc;
+	
+	
 	public PanelJuego() {
 		super();
-		
-
+		x1=x2=y1=y2=-1;//0ut of range
+		someOneWin=false;
 		boardEnable=true;
 		this.setLayout(null);
 		this.newGame= new Button("New game");
@@ -73,44 +82,60 @@ public class PanelJuego extends JPanel implements MouseListener{
 		this.add(newGame);
 	}
 
+
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.WHITE);
 		g.setFont(font);
 		g.drawString("3D Tic Tac Toe!", 50,50);
 		g.drawString(this.usuario+" vs "+this.oponente, 80,100);
-		g.drawString(this.turno+"'s turn", 500,50);		
+		g.drawString(this.turno+"'s turn", 500,50);	
+		g.setColor(ORCOLT);
+		g.fillRect(55, 465, 60, 60);
+		g.setColor(XCOLORT);
+		g.fillRect(40, 480, 60, 60);
+		g.setColor(OCOLORT);
+		g.fillRect(25, 495, 60, 60);
+		g.setColor(Color.WHITE);
+		g.drawLine(25, 495, 85, 495);
+		g.drawLine(25, 515, 85, 515);
+		g.drawLine(25, 535, 85, 535);
+		g.drawLine(25, 555, 85, 555);
+		
+		g.drawLine(25, 495, 25, 555);
+		g.drawLine(45, 495, 45, 555);
+		g.drawLine(65, 495, 65, 555);
+		g.drawLine(85, 495, 85, 555);
+		
+		g.drawLine(25, 495, 55, 465);
+		g.drawLine(85, 495, 115, 465);
+		g.drawLine(85, 555, 115, 525);
 		gatoA.paintComponet(g);
 		gatoB.paintComponet(g);
 		gatoC.paintComponet(g);
+		if(someOneWin) {
+			drawingWinningLine(g);
+		}
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
 		this.xMo=e.getX();
 		this.yMo=e.getY();
 		enviarCordAGato(xMo,yMo);
 		repaint();
 	}
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mouseEntered(MouseEvent e) {	
 	}
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mouseReleased(MouseEvent e) {		
 	}
 	public void enviarCordAGato(int x,int y) {
 		int tablero, xG, yG;
@@ -187,5 +212,22 @@ public class PanelJuego extends JPanel implements MouseListener{
 
 	public void setNewGame(Button newGame) {
 		this.newGame = newGame;
+	}
+	public void drawingWinningLine(Graphics g) {
+		Graphics2D g2= (Graphics2D)g;
+		//TODO draw line.
+		g2.setColor(ORCOL);
+		g2.setStroke(new BasicStroke(15));
+		g2.drawLine(x1, y1, x2, y2);
+	}
+	public void setSomeOneWin(boolean someOneWin) {
+		this.someOneWin = someOneWin;
+	}
+	public void setLine(int x1,int y1 ,int x2,int y2) {
+		//recibe coord. iniciales celda, se le agrega medio largo de celda pra centrar.
+		this.x1=x1+(int)(gatoA.getLargoCell()*.5);
+		this.x2=x2+(int)(gatoA.getLargoCell()*.5);
+		this.y1=y1+(int)(gatoA.getLargoCell()*.5);
+		this.y2=y2+(int)(gatoA.getLargoCell()*.5);
 	}
 }

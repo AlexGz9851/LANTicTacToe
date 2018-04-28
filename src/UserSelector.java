@@ -40,9 +40,10 @@ public class UserSelector extends JPanel implements ActionListener{
 	private static final Font FONT2=new Font("Arial",Font.BOLD,30);
 	private Dimension dimen;
 	private JLabel jLab, jLab2;
-	
-	public UserSelector() {
+	FrameUserSelector fus;
+	public UserSelector(FrameUserSelector fus) {
 		super();
+		this.fus=fus;
 		client = Client.getClient();
 		client.send(null, Action.USERLIST, null);
 		JsonObject response = client.read().get("data").getAsJsonObject();
@@ -164,5 +165,6 @@ public class UserSelector extends JPanel implements ActionListener{
 	
 	private void gameStart(boolean who) {
 		JuegoCont jc= new JuegoCont(who, client);
+		fus.dispose();
 	}
 }

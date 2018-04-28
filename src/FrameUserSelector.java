@@ -12,7 +12,7 @@ public class FrameUserSelector  extends JFrame{
 	public FrameUserSelector() {
 		super("Choose an opponent:");
 		this.setBackground(BKG);
-		us=new UserSelector();
+		us=new UserSelector(this);
 		dim= new Dimension(435, 300);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setPreferredSize(this.dim);

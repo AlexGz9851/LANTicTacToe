@@ -24,7 +24,7 @@ public class Celda {
 
 		if(estado=='O') {
 			g.setColor(OCOLOR);
-			g.fillOval(x0+(int)(0.15*largo), y0+(int)(0.15*largo), (int)(0.7*largo), (int)(0.7*largo));
+			g.fillOval(x0+(int)(0.1*largo), y0+(int)(0.1*largo), (int)(0.8*largo), (int)(0.8*largo));
 			g.setColor(BKG);
 			g.fillOval(x0+(int)(0.25*largo), y0+(int)(0.25*largo), (int)(0.5*largo), (int)(0.5*largo));
 			
@@ -41,10 +41,6 @@ public class Celda {
 			
 			g.setColor(XCOLOR);
 			g.fillPolygon(xPoints, yPoints, 12);
-			//g.fillRect(x0+(int)(0.15*largo), y0+(int)(0.15*largo), (int)(0.7*largo), (int)(0.7*largo));
-			//g.setColor(BKG);
-			//g.fillRect(x0+(int)(0.25*largo), y0+(int)(0.25*largo), (int)(0.5*largo), (int)(0.5*largo));	
-			
 		}
 	}
 	public char getEstado() {
@@ -52,6 +48,12 @@ public class Celda {
 	}
 	public void setEstado(char estado) {
 		this.estado = estado;
+	}
+	public int getX0() {
+		return x0;
+	}
+	public int getY0() {
+		return y0;
 	}
 
 }

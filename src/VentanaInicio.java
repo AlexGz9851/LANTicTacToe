@@ -15,7 +15,7 @@ public class VentanaInicio  extends JFrame{
 	public VentanaInicio() {
 		super("3D Tic Tac Toe");
 		this.setBackground(BKG);
-		pi=new PanelInicio();
+		pi=new PanelInicio(this);
 		dim= new Dimension(870, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setPreferredSize(this.dim);

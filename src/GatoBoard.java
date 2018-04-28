@@ -2,15 +2,20 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class GatoBoard {
-	private int largo,
+	private int largo, alpha,
 				x0,y0,
 				anchoBar,
 				largoCell;
 	private JuegoCont jc;
 	private char nombre;
 	private Celda[] celdas;
+
+	private Color colorGatoBoard;
+	
 	public GatoBoard(char nombre,int x0, int y0, int largo) {
 		celdas= new Celda[9];
+		alpha=40;//testing
+		this.setColorGatoBoard(nombre);
 		this.largo=largo;
 		this.y0=y0;
 		this.x0=x0;
@@ -26,6 +31,8 @@ public class GatoBoard {
 
 	}
 	public void paintComponet(Graphics g) {
+		g.setColor(colorGatoBoard);
+		g.fillRect(x0, y0, largo, largo);
 		g.setColor(Color.WHITE);
 		// # grid in white.
 		g.fillRect(x0+largoCell, this.y0, this.anchoBar, this.largo);
@@ -55,6 +62,22 @@ public class GatoBoard {
 	}
 	public Celda getCelda(int nCelda) {
 		return celdas[nCelda];
+	}
+	public Color getColorGatoBoard() {
+		return colorGatoBoard;
+	}
+	public void setColorGatoBoard(char nombre) {
+		if(nombre=='A') {
+			this.colorGatoBoard = new Color(102, 217, 239,alpha);
+		}else if(nombre=='B') {
+			this.colorGatoBoard =new Color(249, 38, 114,alpha);
+		}else {
+			this.colorGatoBoard = new Color(255,140,0,alpha);	
+		}
+		
+	}
+	public int getLargoCell() {
+		return largoCell;
 	}
 	
 }

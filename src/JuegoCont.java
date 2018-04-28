@@ -30,12 +30,12 @@ public class JuegoCont {
 	VentanaJuego vj;
 	Client client;
 	String j1,j2;
+	int caseW;
 	
 	
 	public JuegoCont(boolean whoStart,Client client) {
 		this.setJC( whoStart, client);
 	}
-	
 	
 	public void move(int numeroSend, char letraBoardSend) {
 		Thread controller = new Thread() {
@@ -126,25 +126,32 @@ public class JuegoCont {
 		this.pj.getGato(letraBoard).getCelda(numeroCelda).setEstado(setCheckStatus);
 
 		//calcular si se ganó.
+		char boardW,checkCell;
+		int nCellW;
 		boolean someoneWin=true;
 		for(int i=0;i<WINCASES.length;i++) {
 			for(int j=0;j<WINCASES[i].length;j++ ) {
 				someoneWin=true;
 				
-				char boardW=WINCASES[i][j].charAt(0);
-				int nCellW= 	(int)(WINCASES[i][j].charAt(1))-(int)('0');
-				//GELPPPPP
-				//statCe
-				char checkCell=this.pj.getGato(boardW).getCelda(nCellW).getEstado();
+				boardW=WINCASES[i][j].charAt(0);
+				nCellW= 	(int)(WINCASES[i][j].charAt(1))-(int)('0');
+				checkCell=this.pj.getGato(boardW).getCelda(nCellW).getEstado();
 				if(!(checkCell==setCheckStatus)) {
 					someoneWin=false;
 					break;
 				}
 			}
 			if(someoneWin) {
+				caseW=i;
 				break;
 			}
 		}
+		this.pj.setLine(this.pj.getGato(WINCASES[caseW][0].charAt(0)).getCelda((int)(WINCASES[caseW][0].charAt(1))-(int)('0')).getX0(),
+						this.pj.getGato(WINCASES[caseW][0].charAt(0)).getCelda((int)(WINCASES[caseW][0].charAt(1))-(int)('0')).getY0(),
+						this.pj.getGato(WINCASES[caseW][2].charAt(0)).getCelda((int)(WINCASES[caseW][2].charAt(1))-(int)('0')).getX0(),
+						this.pj.getGato(WINCASES[caseW][2].charAt(0)).getCelda((int)(WINCASES[caseW][2].charAt(1))-(int)('0')).getY0());
+		this.pj.setSomeOneWin(someoneWin);
+
 		return someoneWin;
 	}
 
@@ -178,7 +185,7 @@ public class JuegoCont {
 		j1=this.client.getUser();
 		j2=this.client.getOpponent();
 		this.turno=whoStart;
-		
+		this.caseW=-1;//out of range.
 		vj= new VentanaJuego();
 		this.pj=vj.getPj();
 		this.pj.setJc(this);
@@ -223,19 +230,17 @@ public class JuegoCont {
 				JsonObject start = new JsonObject();
 				start.add("start", new JsonPrimitive(starting));
 				client.send(this.client.getOpponent(), Action.INICIOJUEGO, start);
-				// TODO restart this class, dispose currently active windows
 				this.setJC(starting, client);
+				this.vj.dispose();
 				
 			}
 			else {
 				JOptionPane.showMessageDialog(null, "The other player doesn't want to play again, sorry :c.");
-				//TODO dispose windows and open user selector
 				FrameUserSelector fus= new FrameUserSelector();
 				this.vj.dispose();
 			}
 		}else {
 			JOptionPane.showMessageDialog(null, "You "+loseOrWin+"! Thanks for playing!");
-			//TODO dispose windows and open user selector
 				FrameUserSelector fus= new FrameUserSelector();
 				this.vj.dispose();
 		}
@@ -245,7 +250,6 @@ public class JuegoCont {
 		this.pj.setBoardEnable(false);
 		this.pj.getNewGame().setEnabled(false);
 		this.client.send(client.getOpponent(), Action.SURRENDER, new JsonObject());
-		//no se si enviar un surrender o un new game.
 	}
 	
 	public void clientWins() {
@@ -260,21 +264,19 @@ public class JuegoCont {
 			if(playAgain2) {
 				JsonObject newGameRequest = this.client.read();
 				boolean starting = !newGameRequest.get("data").getAsJsonObject().get("start").getAsBoolean();
-				// TODO create here the constructor
-				// Dispose windows... doesn´t neeeded dispose anything
+				// creates a new game.
 				this.setJC(starting, client);
+				this.vj.dispose();
 				
 			}
 			else {
 				JOptionPane.showMessageDialog(null, "The other player does't want to play again, Thanks for playing.");	
-				//TODO dispose windows and open user selector
 				FrameUserSelector fus= new FrameUserSelector();
 				this.vj.dispose();
 			}
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "You Win! The other player does't want to play again, sorry :c.");
-			//TODO dispose windows and open user selector
 			FrameUserSelector fus= new FrameUserSelector();
 			this.vj.dispose();
 		}

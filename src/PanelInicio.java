@@ -31,10 +31,13 @@ public class PanelInicio extends JPanel{
 	private JLabel jLab,jLab2,jLab3;
 	private Image imgGato;
 	private Client client;
+	private VentanaInicio vi;
 	
-	public PanelInicio() {
+	public PanelInicio(VentanaInicio vi) {
+
 		//Constructor panel
 		super();
+		this.vi=vi;
 		Client c = Client.getClient();
 		this.setBackground(BKG);
 		this.dimen=new Dimension(870, 600);
@@ -44,6 +47,7 @@ public class PanelInicio extends JPanel{
 		this.tfEntradaNombre.setFont(FONT2);
 		
 		//text field username. Here is where you insert that field.
+		
 		this.tfEntradaNombre.addActionListener(new ActionListener() {
 				boolean validUsername;
 					public void actionPerformed(ActionEvent e) {
@@ -59,7 +63,8 @@ public class PanelInicio extends JPanel{
 								if(validUsername) {
 									setVisible(false);
 									FrameUserSelector fus= new FrameUserSelector();
-									//TODO CERRAR VENTANA
+									vi.dispose();
+									
 									
 								}else {
 									JOptionPane.showMessageDialog(null, "Please Select another name, this is already taken. ");
