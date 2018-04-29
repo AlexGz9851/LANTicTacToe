@@ -2,6 +2,7 @@
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
 
 
@@ -13,12 +14,14 @@ import java.awt.event.ActionListener;
 
 import java.util.Random;
 
-
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+
+import sun.awt.image.PixelConverter.Bgrx;
 
 
 public class UserSelector extends JPanel implements ActionListener{
@@ -41,6 +44,9 @@ public class UserSelector extends JPanel implements ActionListener{
 	private Dimension dimen;
 	private JLabel jLab, jLab2;
 	FrameUserSelector fus;
+	
+	private JRadioButton rbStrict, rbFree;
+	
 	public UserSelector(FrameUserSelector fus) {
 		super();
 		this.fus=fus;
@@ -52,10 +58,23 @@ public class UserSelector extends JPanel implements ActionListener{
 		this.setBackground(BKG);
 		this.dimen=new Dimension(435, 300);
 		this.setPreferredSize(dimen);
+
 		
 		cbUserList = new JComboBox<>();
 		this.refreshUserList(userList);
 		cbUserList.setBounds(0, 0, 300, 200);
+		
+		this.rbStrict=new JRadioButton("Strict", true);
+		this.rbStrict.setFont(FONT);
+		this.rbStrict.setBackground(BKG);
+		this.rbStrict.setForeground(Color.WHITE);
+		this.rbFree=new JRadioButton("Free");
+		this.rbFree.setFont(FONT);
+		this.rbFree.setBackground(BKG);
+		this.rbFree.setForeground(Color.WHITE);
+		ButtonGroup bg= new ButtonGroup();
+		bg.add(rbStrict);
+		bg.add(rbFree);
 		cbUserList.setFont(FONT2);
 		cbUserList.setForeground(BKG);
 		cbUserList.setBackground(Color.WHITE);
@@ -71,12 +90,20 @@ public class UserSelector extends JPanel implements ActionListener{
 		btAceptar.setForeground(Color.WHITE);
 		btAceptar.addActionListener(this);
 		btRefresh.addActionListener(this);
-	
-		this.add(new JLabel("x                                                          "));
+		JLabel a=new JLabel("x                                                          ");
+		a.setForeground(BKG);
+		this.add(a);
 		this.add(jLab);
-		this.add(new JLabel("x                                                                                                     "));
+		JLabel b=new JLabel("x                                                                                                     ");
+		b.setForeground(BKG);
+		this.add(b);
 		this.add(new JLabel("x                                    "));
 		this.add(cbUserList);
+		this.add(new JLabel("x                                              "));
+		this.add(new JLabel("x                                    "));		
+		this.add(rbStrict);
+		this.add(new JLabel("x    "));
+		this.add(rbFree);
 		this.add(new JLabel("x                                    "));
 		this.add(new JLabel("x                                                                                                                  "));
 
@@ -151,7 +178,9 @@ public class UserSelector extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==btAceptar) {
 			this.setEnabled(false);
-			this.client.send((String)this.cbUserList.getSelectedItem(), Action.GAMEREQUEST, null);
+			JsonObject strictOrFree=new JsonObject();
+			strictOrFree.add("typeGame",new JsonPrimitive(this.getTypeOfGame()));
+			this.client.send((String)this.cbUserList.getSelectedItem(), Action.GAMEREQUEST,strictOrFree);
 		}else {
 			client.send(null, Action.USERLIST, null);
 		}
@@ -167,7 +196,12 @@ public class UserSelector extends JPanel implements ActionListener{
 		JuegoCont jc= new JuegoCont(who, client);
 		fus.dispose();
 	}
-	
+	private String getTypeOfGame() {
+		if(rbStrict.isSelected())
+			return "strict";
+		else
+			return "free";
+	}
 	
 	private void refreshUserList(String[] userList) {
 		this.cbUserList.removeAllItems();
