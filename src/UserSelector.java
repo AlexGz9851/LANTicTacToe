@@ -53,7 +53,8 @@ public class UserSelector extends JPanel implements ActionListener{
 		this.dimen=new Dimension(435, 300);
 		this.setPreferredSize(dimen);
 		
-		cbUserList = new JComboBox<>(userList);
+		cbUserList = new JComboBox<>();
+		this.refreshUserList(userList);
 		cbUserList.setBounds(0, 0, 300, 200);
 		cbUserList.setFont(FONT2);
 		cbUserList.setForeground(BKG);
@@ -134,8 +135,7 @@ public class UserSelector extends JPanel implements ActionListener{
 					}
 					else if(action == Action.USERLIST) {
 						self.cbUserList.removeAll();
-						for(String item : new Gson().fromJson(data.get("userList").getAsString(), String[].class))
-							self.cbUserList.addItem(item);
+						self.refreshUserList(new Gson().fromJson(data.get("userList").getAsString(), String[].class));
 					}
 					else if(action == Action.ERROR) {
 						JOptionPane.showMessageDialog(null, "The selected player is currently in a game, please select another or wait and try again.");
@@ -166,5 +166,13 @@ public class UserSelector extends JPanel implements ActionListener{
 	private void gameStart(boolean who) {
 		JuegoCont jc= new JuegoCont(who, client);
 		fus.dispose();
+	}
+	
+	
+	private void refreshUserList(String[] userList) {
+		this.cbUserList.removeAllItems();
+		for(String item:userList)
+			if(item!=null)
+				this.cbUserList.addItem(item);
 	}
 }
