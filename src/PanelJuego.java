@@ -25,7 +25,9 @@ public class PanelJuego extends JPanel implements MouseListener{
 	private String usuario,
 				   oponente,
 				   turno;
-	private boolean boardEnable,someOneWin;
+	private boolean boardEnable,
+					someOneWin,
+					strict;
 	private int xMo, yMo,	//coordenada de click
 				xA, yTodos,//coordenadas de los boards en panel.
 				xB,
@@ -43,6 +45,7 @@ public class PanelJuego extends JPanel implements MouseListener{
 	public PanelJuego() {
 		super();
 		x1=x2=y1=y2=-1;//0ut of range
+		strict=true;// TODO jc.isStrict();
 		someOneWin=false;
 		boardEnable=true;
 		this.setLayout(null);
@@ -114,6 +117,11 @@ public class PanelJuego extends JPanel implements MouseListener{
 		gatoA.paintComponet(g);
 		gatoB.paintComponet(g);
 		gatoC.paintComponet(g);
+		
+		if(strict) {
+			this.drawBoardEnable(g);
+		}
+
 		if(someOneWin) {
 			drawingWinningLine(g);
 		}
@@ -122,7 +130,7 @@ public class PanelJuego extends JPanel implements MouseListener{
 	public void mouseClicked(MouseEvent e) {
 		this.xMo=e.getX();
 		this.yMo=e.getY();
-		enviarCordAGato(xMo,yMo);
+		enviarCordAValidar(xMo,yMo);
 		repaint();
 	}
 	@Override
@@ -137,26 +145,38 @@ public class PanelJuego extends JPanel implements MouseListener{
 	@Override
 	public void mouseReleased(MouseEvent e) {		
 	}
-	public void enviarCordAGato(int x,int y) {
-		int tablero, xG, yG;
+	private void enviarCordAValidar(int x,int y) {
+		int tablero=x/(this.lenghtG+this.margen);
+		char gatoClick,
+			 gatoValido;
+		gatoValido=jc.getStrictBoardEnable();
+		gatoClick=(char)(tablero+(int)('A'));
+		
 		if(boardEnable) {
-			tablero=x/(this.lenghtG+this.margen);
-			xG=x%(this.lenghtG+this.margen);
-			if((xG>this.margen && y>=this.yTodos) && (y<(this.yTodos+this.lenghtG))) {
-				yG=y-200;
-				xG-=this.margen;
-				if(tablero==0) {
-					this.gatoA.setClick(xG, yG);//xG y yG manda las coordenadas relativas del click al gato.
-				}else if(tablero==1) {
-					this.gatoB.setClick(xG, yG);				
-				}else if(tablero==2) {
-					this.gatoC.setClick(xG, yG);
-				}else{
-					
-				}
+			if(strict) {
+				if(gatoClick==gatoValido)
+					this.enviarCordAGato(tablero, x, y);	
+			}else {
+				this.enviarCordAGato(tablero, x, y);
 			}
 		}
 	}
+	public void enviarCordAGato(int tablero, int x, int y) {
+		int xG, yG;
+		xG=x%(this.lenghtG+this.margen);
+		if((xG>this.margen && y>=this.yTodos) && (y<(this.yTodos+this.lenghtG))) {
+			yG=y-200;
+			xG-=this.margen;
+			if(tablero==0) {
+				this.gatoA.setClick(xG, yG);//xG y yG manda las coordenadas relativas del click al gato.
+			}else if(tablero==1) {
+				this.gatoB.setClick(xG, yG);				
+			}else if(tablero==2) {
+				this.gatoC.setClick(xG, yG);
+			}
+		}
+	}
+	
 	public Dimension getDimen() {
 		return dimen;
 	}
@@ -172,14 +192,12 @@ public class PanelJuego extends JPanel implements MouseListener{
 	public void setTurno(String turno) {
 		this.turno = turno;
 	}
-
 	public boolean isBoardEnable() {
 		return boardEnable;
 	}
 	public void setBoardEnable(boolean boardEnable) {
 		this.boardEnable = boardEnable;
 	}
-
 	public GatoBoard getGato(char board) {
 		if(board=='A') {
 			return gatoA;
@@ -191,12 +209,9 @@ public class PanelJuego extends JPanel implements MouseListener{
 			return null;
 		}
 	}
-
-	
 	public JuegoCont getJc() {
 		return jc;
 	}
-
 	public void setJc(JuegoCont jc) {
 		this.jc = jc;
 	}
@@ -205,20 +220,35 @@ public class PanelJuego extends JPanel implements MouseListener{
 		this.getGato('B').setJc(jc);
 		this.getGato('C').setJc(jc);
 	}
-
 	public Button getNewGame() {
 		return newGame;
 	}
-
 	public void setNewGame(Button newGame) {
 		this.newGame = newGame;
 	}
-	public void drawingWinningLine(Graphics g) {
+	private void drawingWinningLine(Graphics g) {
 		Graphics2D g2= (Graphics2D)g;
 		//TODO draw line.
 		g2.setColor(ORCOL);
 		g2.setStroke(new BasicStroke(15));
 		g2.drawLine(x1, y1, x2, y2);
+	}
+	private void drawBoardEnable(Graphics g) {
+		char board;
+		board='C';
+		//TODO jc.getStrictBoardEnable();
+		Graphics2D g3= (Graphics2D)g;
+		g3.setColor(ORCOL);
+		g3.setStroke(new BasicStroke(15));
+		if(board=='A') {
+			g3.drawRect(xA-18, yTodos-18, lenghtG+36, lenghtG+36);
+		}else if(board=='B') {
+			g3.drawRect(xB-18, yTodos-18, lenghtG+36, lenghtG+36);
+		}else if(board=='C') {
+			g3.drawRect(xC-18, yTodos-18, lenghtG+36, lenghtG+36);
+		}
+		g=(Graphics)g;
+		
 	}
 	public void setSomeOneWin(boolean someOneWin) {
 		this.someOneWin = someOneWin;
@@ -229,5 +259,17 @@ public class PanelJuego extends JPanel implements MouseListener{
 		this.x2=x2+(int)(gatoA.getLargoCell()*.5);
 		this.y1=y1+(int)(gatoA.getLargoCell()*.5);
 		this.y2=y2+(int)(gatoA.getLargoCell()*.5);
+	}
+
+
+
+	public boolean isStrict() {
+		return strict;
+	}
+
+
+
+	public void setStrict(boolean strict) {
+		this.strict = strict;
 	}
 }

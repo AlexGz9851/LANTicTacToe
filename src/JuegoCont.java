@@ -8,7 +8,7 @@ import com.google.gson.JsonPrimitive;
 public class JuegoCont {
 	
 	private PanelJuego pj;//EL PANEL JUEGO QUE CONTROLARÁ
-	private boolean turno;
+	private boolean turno, strict;
 	private  final String[][] WINCASES= {
 			{"A0","A1","A2"},{"A3","A4","A5"},{"A6","A7","A8"},{"B0","B1","B2"},{"B3","B4","B5"},{"B6","B7","B8"},
 			{"C0","C1","C2"},{"C3","C4","C5"},{"C6","C7","C8"},
@@ -31,12 +31,11 @@ public class JuegoCont {
 	Client client;
 	String j1,j2;
 	int caseW;
+	char strictBoardEnable;
 	
-	
-	public JuegoCont(boolean whoStart,Client client) {
-		this.setJC( whoStart, client);
+	public JuegoCont(boolean whoStart,Client client, boolean typeOfGame) {
+		this.setJC( whoStart, client, typeOfGame);
 	}
-	
 	public void move(int numeroSend, char letraBoardSend) {
 		Thread controller = new Thread() {
 			public void run() {
@@ -75,18 +74,13 @@ public class JuegoCont {
 		dataToSend.add("celda", new JsonPrimitive(celda));
 		this.client.send(client.getOpponent(), Action.TURNO, dataToSend);
 		return end;
-
 	}
-	
 	private void moveBack() {
 		boolean end2;
-
 		JsonObject moveBack =this.client.read();//waiting data
 		Action action = Action.getValue(moveBack.get("action").getAsString());
 		String from = moveBack.get("from").getAsString();
 		String data;
-
-		
 		
 		if(action == Action.TURNO) {
 			try {
@@ -98,6 +92,8 @@ public class JuegoCont {
 			char letraReaded =data.charAt(0);
 			int numeroReaded= data.charAt(1)-(int)('0');
 			end2=this.calculate(numeroReaded, letraReaded, turno);//calculates the move back.
+			if(strict) 
+				calculatePermitedBoard(numeroReaded);
 			this.pj.repaint();
 			if(!end2) {
 				this.turno=true;
@@ -121,7 +117,7 @@ public class JuegoCont {
 					JsonObject newGameRequest = this.client.read();
 					boolean starting = !newGameRequest.get("data").getAsJsonObject().get("start").getAsBoolean();
 					// creates a new game.
-					this.setJC(starting, client);
+					this.setJC(starting, client,this.strict);
 					this.vj.dispose();
 					
 				}
@@ -138,7 +134,6 @@ public class JuegoCont {
 			}
 		}
 	}
-	
 	private boolean calculate(int numeroCelda, char letraBoard, boolean turno) {
 		char setCheckStatus;
 		//Host siempre será O y opponent será X.
@@ -205,9 +200,10 @@ public class JuegoCont {
 		
 	}
 	
-	public void setJC(boolean whoStart,Client client) {
-
+	public void setJC(boolean whoStart,Client client, boolean strict) {
+		this.strict=strict;
 		this.client=client;
+		this.strictBoardEnable='N';
 		j1=this.client.getUser();
 		j2=this.client.getOpponent();
 		this.turno=whoStart;
@@ -220,6 +216,7 @@ public class JuegoCont {
 
 		this.cleanCells();
 		
+		this.pj.setStrict(strict);
 		this.pj.setUsuario((whoStart)?j1:j2);
 		this.pj.setOponente((whoStart)?j2:j1);
 		this.pj.setTurno((whoStart)?j1:j2);
@@ -233,6 +230,14 @@ public class JuegoCont {
 		}
 	}
 	
+	public char getStrictBoardEnable() {
+		return strictBoardEnable;
+	}
+
+	public void setStrictBoardEnable(char strictBoardEnable) {
+		this.strictBoardEnable = strictBoardEnable;
+	}
+
 	public void respondASurrender(String fromx) {
 		this.playAgain( fromx,"win");
 	}
@@ -257,7 +262,7 @@ public class JuegoCont {
 				JsonObject start = new JsonObject();
 				start.add("start", new JsonPrimitive(starting));
 				client.send(this.client.getOpponent(), Action.INICIOJUEGO, start);
-				this.setJC(starting, client);
+				this.setJC(starting, client,this.strict);
 				this.vj.dispose();
 				
 			}
@@ -292,7 +297,7 @@ public class JuegoCont {
 				JsonObject newGameRequest = this.client.read();
 				boolean starting = !newGameRequest.get("data").getAsJsonObject().get("start").getAsBoolean();
 				// creates a new game.
-				this.setJC(starting, client);
+				this.setJC(starting, client,this.strict);
 				this.vj.dispose();
 				
 			}
@@ -307,5 +312,16 @@ public class JuegoCont {
 			FrameUserSelector fus= new FrameUserSelector();
 			this.vj.dispose();
 		}
+	}
+	private void calculatePermitedBoard(int numeroReaded) {
+		this.strictBoardEnable=(char)((numeroReaded%3)+(int)('A'));
+	}
+
+	public boolean isStrict() {
+		return strict;
+	}
+
+	public void setStrict(boolean strict) {
+		this.strict = strict;
 	}
 }
