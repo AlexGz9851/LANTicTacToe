@@ -24,7 +24,7 @@ public class PanelInicio extends JPanel{
 	private static final Color BKG=new Color(39,40,34);//POR QUE NO JALA EL BKG'??
 	private static final Font FONT=new Font("Arial",Font.BOLD,150);
 	private static final Font FONT2=new Font("Arial",Font.BOLD,30);
-	private static final Font FONT3=new Font("Arial",Font.BOLD,50);
+	private static final Font FONT3=new Font("Arial",Font.BOLD,70);
 	
 	private Dimension dimen;
 	private JTextField tfEntradaNombre;
@@ -79,7 +79,7 @@ public class PanelInicio extends JPanel{
 	}
 	
 	public void paintComponent(Graphics g) {
-		g.drawImage(this.imgGato, 0, this.getHeight()-350, 350, 277, this);
+		g.drawImage(this.imgGato, 0, this.getHeight()-350, 420, 333, this);
 		g.setFont(FONT);
 		g.setColor(XCOLOR);
 		g.drawString("T", 80, 200);
@@ -95,7 +95,7 @@ public class PanelInicio extends JPanel{
 		g.drawString("oe", 650, 200);
 		g.drawString("3D", 560, 380);
 		g.setFont(FONT2);
-		g.drawString("Introduce your username", 250, 500);
+		g.drawString("Introduce your username", 250, 540);
 		
 		
 		
