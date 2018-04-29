@@ -143,13 +143,14 @@ public class JuegoCont {
 			}
 			if(someoneWin) {
 				caseW=i;
-				break;
-			}
-		}
-		this.pj.setLine(this.pj.getGato(WINCASES[caseW][0].charAt(0)).getCelda((int)(WINCASES[caseW][0].charAt(1))-(int)('0')).getX0(),
+				this.pj.setLine(this.pj.getGato(WINCASES[caseW][0].charAt(0)).getCelda((int)(WINCASES[caseW][0].charAt(1))-(int)('0')).getX0(),
 						this.pj.getGato(WINCASES[caseW][0].charAt(0)).getCelda((int)(WINCASES[caseW][0].charAt(1))-(int)('0')).getY0(),
 						this.pj.getGato(WINCASES[caseW][2].charAt(0)).getCelda((int)(WINCASES[caseW][2].charAt(1))-(int)('0')).getX0(),
 						this.pj.getGato(WINCASES[caseW][2].charAt(0)).getCelda((int)(WINCASES[caseW][2].charAt(1))-(int)('0')).getY0());
+				break;
+			}
+		}
+		
 		this.pj.setSomeOneWin(someoneWin);
 
 		return someoneWin;
