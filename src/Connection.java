@@ -43,7 +43,6 @@ public class Connection extends Thread{
 	            }
 	            else {
 	            	new Message("Server", null, Action.ERROR, null, this.socket).sendMessage();
-	            	this.closeSocket();
 	        	}
 	            
 	        }

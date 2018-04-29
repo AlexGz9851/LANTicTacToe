@@ -109,8 +109,33 @@ public class JuegoCont {
 				this.opponentWins(from);
 			}
 		}else if(action == Action.SURRENDER) {
-			//TODO recieving a surrender.
 			this.respondASurrender(from);
+		} else if(action == Action.FINJUEGO) {
+			if(moveBack.get("data").getAsJsonObject().get("playAgain").getAsBoolean()) {
+				int answer = JOptionPane.showConfirmDialog(null, "The other player surrender! Do you wanna play again?", "Play again?", JOptionPane.YES_NO_OPTION);
+				boolean playAgain2 = answer==JOptionPane.YES_OPTION;
+				JsonObject valueToSend = new JsonObject();
+				valueToSend.add("playAgain", new JsonPrimitive(playAgain2));
+				this.client.send(client.getOpponent(), Action.GAMEREQUEST, valueToSend);
+				if(playAgain2) {
+					JsonObject newGameRequest = this.client.read();
+					boolean starting = !newGameRequest.get("data").getAsJsonObject().get("start").getAsBoolean();
+					// creates a new game.
+					this.setJC(starting, client);
+					this.vj.dispose();
+					
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Thanks for playing.");	
+					FrameUserSelector fus= new FrameUserSelector();
+					this.vj.dispose();
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "The other player surrender and doesn't want to restart the game, Thanks for playing.");
+				FrameUserSelector fus= new FrameUserSelector();
+				this.vj.dispose();
+			}
 		}
 	}
 	
@@ -215,6 +240,7 @@ public class JuegoCont {
 	public void opponentWins(String fromx) {
 		this.playAgain( fromx,"lose");
 	}
+	
 	public void playAgain(String fromx, String loseOrWin) {
 
 		this.turno=false;
