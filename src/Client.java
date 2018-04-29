@@ -10,18 +10,23 @@ public class Client {
     
     private Client() 
     {
-		try {
-			this.connection = new Socket("192.168.43.165", 8081);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.reconnect();
     }
     
     public static Client getClient() {
     	return Client.client;
     }
     
+    public void reconnect() {
+    	try {
+	    	if(connection != null)
+	    		this.connection.close();
+    		this.connection = new Socket("192.168.1.35", 8081);
+    	}
+    	catch(IOException ex) {
+    		ex.printStackTrace();
+    	}
+    } 
 
     
     public boolean tryLogin(String user) {
