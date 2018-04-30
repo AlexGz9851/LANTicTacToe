@@ -14,10 +14,10 @@ public class VentanaJuego extends JFrame{
 	private Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
 	private PanelJuego pj;
 
-	public VentanaJuego() {
+	public VentanaJuego(JuegoCont jc) {
 		super("3D Tic Tac Toe");
 		this.setBackground(BKG);
-		pj=new PanelJuego();
+		pj=new PanelJuego(jc);
 		dim= new Dimension(870, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setPreferredSize(this.dim);
@@ -42,7 +42,7 @@ public class VentanaJuego extends JFrame{
 	}
 	
 	public static void main(String[] args) {
-		VentanaJuego vj= new VentanaJuego();
+		//VentanaJuego vj= new VentanaJuego(jc);
 	}
 
 }

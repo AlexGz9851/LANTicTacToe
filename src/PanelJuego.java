@@ -42,8 +42,9 @@ public class PanelJuego extends JPanel implements MouseListener{
 	private JuegoCont jc;
 	
 	
-	public PanelJuego() {
+	public PanelJuego(JuegoCont jc) {
 		super();
+		this.jc=jc;
 		x1=x2=y1=y2=-1;//0ut of range
 		strict=jc.isStrict();
 		someOneWin=false;

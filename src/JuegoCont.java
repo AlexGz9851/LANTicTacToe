@@ -208,7 +208,7 @@ public class JuegoCont {
 		j2=this.client.getOpponent();
 		this.turno=whoStart;
 		this.caseW=-1;//out of range.
-		vj= new VentanaJuego();
+		vj= new VentanaJuego(this);
 		this.pj=vj.getPj();
 		this.pj.setJc(this);
 		
