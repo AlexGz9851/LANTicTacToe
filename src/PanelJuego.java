@@ -45,7 +45,7 @@ public class PanelJuego extends JPanel implements MouseListener{
 	public PanelJuego() {
 		super();
 		x1=x2=y1=y2=-1;//0ut of range
-		strict=true;// TODO jc.isStrict();
+		strict=jc.isStrict();
 		someOneWin=false;
 		boardEnable=true;
 		this.setLayout(null);
@@ -228,15 +228,14 @@ public class PanelJuego extends JPanel implements MouseListener{
 	}
 	private void drawingWinningLine(Graphics g) {
 		Graphics2D g2= (Graphics2D)g;
-		//TODO draw line.
+		// draw line.
 		g2.setColor(ORCOL);
 		g2.setStroke(new BasicStroke(15));
 		g2.drawLine(x1, y1, x2, y2);
 	}
 	private void drawBoardEnable(Graphics g) {
 		char board;
-		board='C';
-		//TODO jc.getStrictBoardEnable();
+		board=jc.getStrictBoardEnable();
 		Graphics2D g3= (Graphics2D)g;
 		g3.setColor(ORCOL);
 		g3.setStroke(new BasicStroke(15));
