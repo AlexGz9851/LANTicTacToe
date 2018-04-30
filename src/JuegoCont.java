@@ -58,6 +58,7 @@ public class JuegoCont {
 		};
 		controller.start();
 	}
+	
 	private boolean sendData(int numeroSend,char letraBoardSend) {
 		boolean end;
 		//send the cell as data.
@@ -75,6 +76,7 @@ public class JuegoCont {
 		this.client.send(client.getOpponent(), Action.TURNO, dataToSend);
 		return end;
 	}
+	
 	private void moveBack() {
 		boolean end2;
 		JsonObject moveBack =this.client.read();//waiting data
@@ -108,7 +110,7 @@ public class JuegoCont {
 			this.respondASurrender(from);
 		} else if(action == Action.FINJUEGO) {
 			if(moveBack.get("data").getAsJsonObject().get("playAgain").getAsBoolean()) {
-				int answer = JOptionPane.showConfirmDialog(null, "The other player surrender! Do you wanna play again?", "Play again?", JOptionPane.YES_NO_OPTION);
+				int answer = JOptionPane.showConfirmDialog(null, "Do you wanna play again?", "Play again?", JOptionPane.YES_NO_OPTION);
 				boolean playAgain2 = answer==JOptionPane.YES_OPTION;
 				JsonObject valueToSend = new JsonObject();
 				valueToSend.add("playAgain", new JsonPrimitive(playAgain2));
@@ -129,7 +131,7 @@ public class JuegoCont {
 				}
 			}
 			else {
-				JOptionPane.showMessageDialog(null, "The other player surrender and doesn't want to restart the game, Thanks for playing.");
+				JOptionPane.showMessageDialog(null, "Thanks for playing.");
 				FrameUserSelector fus= new FrameUserSelector();
 				this.vj.dispose();
 			}
