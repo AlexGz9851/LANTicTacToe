@@ -201,11 +201,8 @@ public class UserSelector extends JPanel implements ActionListener{
 		fus.dispose();
 	}
 	
-	private String getTypeOfGame() {
-		if(rbStrict.isSelected())
-			return "strict";
-		else
-			return "free";
+	private boolean getTypeOfGame() {
+		return this.rbStrict.isSelected();
 	}
 	
 	private void refreshUserList(String[] userList) {
