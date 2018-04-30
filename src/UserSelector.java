@@ -197,7 +197,7 @@ public class UserSelector extends JPanel implements ActionListener{
 	}
 	
 	private void gameStart(boolean who, boolean strict) {
-		JuegoCont jc= new JuegoCont(who, client, rbStrict.isSelected());
+		JuegoCont jc= new JuegoCont(who, client, strict);
 		fus.dispose();
 	}
 	

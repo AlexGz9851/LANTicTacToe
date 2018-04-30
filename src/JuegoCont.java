@@ -282,6 +282,7 @@ public class JuegoCont {
 		this.pj.setBoardEnable(false);
 		this.pj.getNewGame().setEnabled(false);
 		this.client.send(client.getOpponent(), Action.SURRENDER, new JsonObject());
+		moveBack();
 	}
 	
 	public void clientWins() {
