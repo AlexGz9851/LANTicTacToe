@@ -154,7 +154,7 @@ public class PanelJuego extends JPanel implements MouseListener{
 		
 		if(boardEnable) {
 			if(strict) {
-				if(gatoClick==gatoValido)
+				if(gatoClick==gatoValido ||gatoValido=='N' )
 					this.enviarCordAGato(tablero, x, y);	
 			}else {
 				this.enviarCordAGato(tablero, x, y);
