@@ -117,8 +117,9 @@ public class JuegoCont {
 					JsonObject newGameRequest = this.client.read();
 					boolean starting = !newGameRequest.get("data").getAsJsonObject().get("start").getAsBoolean();
 					// creates a new game.
-					this.setJC(starting, client,this.strict);
+					
 					this.vj.dispose();
+					this.setJC(starting, client,this.strict);
 					
 				}
 				else {
@@ -253,8 +254,8 @@ public class JuegoCont {
 				JsonObject start = new JsonObject();
 				start.add("start", new JsonPrimitive(starting));
 				client.send(this.client.getOpponent(), Action.INICIOJUEGO, start);
-				this.setJC(starting, client,this.strict);
 				this.vj.dispose();
+				this.setJC(starting, client,this.strict);
 				
 			}
 			else {
@@ -289,8 +290,9 @@ public class JuegoCont {
 				JsonObject start = new JsonObject();
 				start.add("start", new JsonPrimitive(starting));
 				client.send(this.client.getOpponent(), Action.INICIOJUEGO, start);
-				this.setJC(starting, client,this.strict);
+				
 				this.vj.dispose();
+				this.setJC(starting, client,this.strict);
 				
 			}
 			else {
@@ -325,8 +327,9 @@ public class JuegoCont {
 				JsonObject newGameRequest = this.client.read();
 				boolean starting = !newGameRequest.get("data").getAsJsonObject().get("start").getAsBoolean();
 				// creates a new game.
-				this.setJC(starting, client,this.strict);
+				
 				this.vj.dispose();
+				this.setJC(starting, client,this.strict);
 				
 			}
 			else {
