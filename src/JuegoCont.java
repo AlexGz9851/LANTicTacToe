@@ -241,7 +241,34 @@ public class JuegoCont {
 	}
 
 	public void respondASurrender(String fromx) {
-		this.playAgain( fromx,"win");
+		this.turno=false;
+		int answer = JOptionPane.showConfirmDialog(null, "The other player surrender! Do you wanna play again?", "Play again?", JOptionPane.YES_NO_OPTION);
+		boolean playAgain = answer==JOptionPane.YES_OPTION;
+		JsonObject valueToSend = new JsonObject();
+		valueToSend.add("playAgain", new JsonPrimitive(playAgain));
+		this.client.send(client.getOpponent(), Action.FINJUEGO, valueToSend);
+		if(playAgain) {
+			JsonObject newGameRequest = this.client.read();
+			if(newGameRequest.get("data").getAsJsonObject().get("playAgain").getAsBoolean()) {
+				Boolean starting = new Random().nextInt(2) == 0;		
+				this.client.setOpponent(fromx);
+				JsonObject start = new JsonObject();
+				start.add("start", new JsonPrimitive(starting));
+				client.send(this.client.getOpponent(), Action.INICIOJUEGO, start);
+				this.setJC(starting, client,this.strict);
+				this.vj.dispose();
+				
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "The other player doesn't want to play again, sorry :c.");
+				FrameUserSelector fus= new FrameUserSelector();
+				this.vj.dispose();
+			}
+		}else {
+			JOptionPane.showMessageDialog(null, "Thanks for playing!");
+				FrameUserSelector fus= new FrameUserSelector();
+				this.vj.dispose();
+		}
 	}
 	
 	public void opponentWins(String fromx) {
