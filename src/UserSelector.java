@@ -145,6 +145,7 @@ public class UserSelector extends JPanel implements ActionListener{
 								self.client.setOpponent(from);
 								JsonObject start = new JsonObject();
 								start.add("start", new JsonPrimitive(starting));
+								start.add("typeGame",new JsonPrimitive(self.getTypeOfGame()));
 								client.send(self.client.getOpponent(), Action.INICIOJUEGO, start);
 								self.gameStart(starting);
 								break;
@@ -157,7 +158,7 @@ public class UserSelector extends JPanel implements ActionListener{
 					}
 					else if(action == Action.INICIOJUEGO) {
 						self.client.setOpponent(from);
-						self.gameStart(!data.get("start").getAsBoolean());
+						self.gameStart(!data.get("start").getAsBoolean(), data.get("typeGame").getAsBoolean());
 						break;
 					}
 					else if(action == Action.USERLIST) {
@@ -178,9 +179,7 @@ public class UserSelector extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==btAceptar) {
 			this.setEnabled(false);
-			JsonObject strictOrFree=new JsonObject();
-			strictOrFree.add("typeGame",new JsonPrimitive(this.getTypeOfGame()));
-			this.client.send((String)this.cbUserList.getSelectedItem(), Action.GAMEREQUEST,strictOrFree);
+			this.client.send((String)this.cbUserList.getSelectedItem(), Action.GAMEREQUEST, null);
 		}else {
 			client.send(null, Action.USERLIST, null);
 		}
@@ -193,9 +192,15 @@ public class UserSelector extends JPanel implements ActionListener{
 	}
 	
 	private void gameStart(boolean who) {
-		JuegoCont jc= new JuegoCont(who, client);
+		JuegoCont jc= new JuegoCont(who, client, rbStrict.isSelected());
 		fus.dispose();
 	}
+	
+	private void gameStart(boolean who, boolean strict) {
+		JuegoCont jc= new JuegoCont(who, client, rbStrict.isSelected());
+		fus.dispose();
+	}
+	
 	private String getTypeOfGame() {
 		if(rbStrict.isSelected())
 			return "strict";
