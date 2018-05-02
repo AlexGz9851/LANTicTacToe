@@ -1,3 +1,7 @@
+//Luis Iván Morett Arévalo		   A01634417
+//Jesús Alejandro González Sánchez A00820225 
+//POO Gp2
+//Profesor: Gerardo Salinas.
 
 public enum Action {
 	SURRENDER("surrender"),USERLIST("userList"), LOGOUT("logOut"), NEWUSER("newUser"), ERROR("error"), INICIOJUEGO("inicioJuego"), FINJUEGO("finJuego"), TURNO("turno"), OK("ok"), GAMEREQUEST("gameRequest");

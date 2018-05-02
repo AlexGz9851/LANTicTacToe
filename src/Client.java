@@ -1,3 +1,8 @@
+//Luis Iván Morett Arévalo		   A01634417
+//Jesús Alejandro González Sánchez A00820225 
+//POO Gp2
+//Profesor: Gerardo Salinas.
+
 import java.io.IOException;
 import java.net.Socket;
 import com.google.gson.JsonObject;
@@ -21,7 +26,7 @@ public class Client {
     	try {
 	    	if(connection != null)
 	    		this.connection.close();
-    		this.connection = new Socket("192.168.1.35", 8081);
+    		this.connection = new Socket("192.168.43.165", 8081);
     	}
     	catch(IOException ex) {
     		ex.printStackTrace();

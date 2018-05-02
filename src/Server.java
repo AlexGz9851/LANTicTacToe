@@ -1,3 +1,8 @@
+//Luis Iván Morett Arévalo		   A01634417
+//Jesús Alejandro González Sánchez A00820225 
+//POO Gp2
+//Profesor: Gerardo Salinas.
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
