@@ -47,7 +47,7 @@ public class UserSelector extends JPanel implements ActionListener{
 	private static final Font FONT2=new Font("Arial",Font.BOLD,30);
 	private Dimension dimen;
 	private JLabel jLab, jLab2;
-	FrameUserSelector fus;
+	private FrameUserSelector fus;
 	
 	private JRadioButton rbStrict, rbFree;
 	

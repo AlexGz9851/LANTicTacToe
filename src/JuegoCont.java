@@ -32,11 +32,11 @@ public class JuegoCont {
 			
 			{"A0","B4","C8"},{"A2","B4","C6"},{"A6","B4","C2"},{"A8","B4","C0"}
 			};
-	VentanaJuego vj;
-	Client client;
-	String j1,j2;
-	int caseW;
-	char strictBoardEnable;
+	private VentanaJuego vj;
+	private Client client;
+	private String j1,j2;
+	private int caseW;
+	private char strictBoardEnable;
 	
 	public JuegoCont(boolean whoStart,Client client, boolean typeOfGame) {
 		this.setJC( whoStart, client, typeOfGame);
@@ -361,5 +361,11 @@ public class JuegoCont {
 
 	public void setStrict(boolean strict) {
 		this.strict = strict;
+	}
+	public String getJ1() {
+		return j1;
+	}
+	public void setJ1(String j1) {
+		this.j1 = j1;
 	}
 }

@@ -124,7 +124,7 @@ public class PanelJuego extends JPanel implements MouseListener{
 		gatoB.paintComponet(g);
 		gatoC.paintComponet(g);
 		
-		if(strict) {
+		if(strict && turno==jc.getJ1()) {
 			this.drawBoardEnable(g);
 		}
 

@@ -1,6 +1,6 @@
 //Luis Iván Morett Arévalo		   A0163441
 //Jesús Alejandro González Sánchez A00820225 
-//POO Gp2
+//POO Gp2Ale
 //Profesor: Gerardo Salinas.
 
 import java.awt.Color;
